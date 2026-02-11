@@ -3,7 +3,7 @@
 
 An AI-powered 3-layer anomaly detection system for Indian export trade shipments.
 
-**Live Demo:** [https://your-app-name.streamlit.app](https://your-app-name.streamlit.app)
+**Live Demo:** (https://trade-anomaly-detective-cb4x8eer5mh4htgwryuy5v.streamlit.app/)
 
 ---
 
