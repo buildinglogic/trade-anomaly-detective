@@ -1,7 +1,6 @@
 """
 llm_detector.py
 Layer 3: LLM-powered detection using Google Gemini 1.5 Flash (FREE tier).
-Only used for things Layers 1 & 2 cannot handle.
 """
 
 import os
@@ -18,14 +17,12 @@ DATA_DIR   = os.path.join(os.path.dirname(__file__), '..', 'data')
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'output')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# ── Configure Gemini ─────────────────────────────────────────────────────
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
 
 MODEL_NAME = "gemini-1.5-flash"
 
-# ── Usage tracking ───────────────────────────────────────────────────────
 usage_log = {
     "provider": "Google AI Studio",
     "model": MODEL_NAME,
@@ -35,17 +32,27 @@ usage_log = {
     "breakdown_by_task": {},
     "avg_latency_ms": 0,
     "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
-    "notes": "Gemini 1.5 Flash - free tier (15 RPM, 1M TPM/day). Cost effectively $0 on free tier."
+    "notes": "Gemini 1.5 Flash - free tier. Cost effectively $0."
 }
 latencies = []
 
 
+def _ensure_task_key(task_name: str):
+    """Make sure the task key exists in breakdown_by_task before accessing it."""
+    if task_name not in usage_log["breakdown_by_task"]:
+        usage_log["breakdown_by_task"][task_name] = {
+            "calls": 0,
+            "tokens": 0,
+            "description": ""
+        }
+
+
 def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
     """Call Gemini API with retry logic and usage tracking."""
-    global usage_log
+    _ensure_task_key(task_name)
 
     if not GEMINI_API_KEY:
-        return f"[LLM UNAVAILABLE — Set GEMINI_API_KEY in .env file]"
+        return "[LLM UNAVAILABLE - Set GEMINI_API_KEY in Streamlit Secrets]"
 
     model = genai.GenerativeModel(MODEL_NAME)
 
@@ -58,7 +65,6 @@ def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
 
             text = response.text
 
-            # Approximate token counts (Gemini doesn't always return token counts in free tier)
             input_tokens  = len(prompt.split()) * 4 // 3
             output_tokens = len(text.split()) * 4 // 3
 
@@ -66,11 +72,6 @@ def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
             usage_log["total_tokens"]["input"]  += input_tokens
             usage_log["total_tokens"]["output"] += output_tokens
             usage_log["total_tokens"]["total"]  += (input_tokens + output_tokens)
-
-            if task_name not in usage_log["breakdown_by_task"]:
-                usage_log["breakdown_by_task"][task_name] = {
-                    "calls": 0, "tokens": 0, "description": ""
-                }
             usage_log["breakdown_by_task"][task_name]["calls"]  += 1
             usage_log["breakdown_by_task"][task_name]["tokens"] += (input_tokens + output_tokens)
 
@@ -86,21 +87,16 @@ def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
 
 
 def validate_hs_codes(shipments_df: pd.DataFrame) -> list:
-    """
-    Check HS code vs product description using LLM.
-    We only send UNIQUE (hs_code, product_description) combos — not all 250 rows.
-    """
+    """Check HS code vs product description using LLM."""
     anomalies = []
     counter = [0]
 
-    # Get unique combos only — efficient LLM usage
     unique_combos = shipments_df[
         ['shipment_id', 'hs_code', 'product_description']
     ].drop_duplicates(subset=['hs_code', 'product_description'])
 
-    print(f"   LLM: Validating {len(unique_combos)} unique (HS code, product) combinations...")
+    print(f"   LLM: Validating {len(unique_combos)} unique HS code combinations...")
 
-    # Build batch prompt — ONE call for all unique combos
     combos_text = "\n".join([
         f"- ID:{row['shipment_id']} | HS:{row['hs_code']} | Product: {row['product_description']}"
         for _, row in unique_combos.iterrows()
@@ -111,8 +107,8 @@ def validate_hs_codes(shipments_df: pd.DataFrame) -> list:
 For each entry, check if the HS code correctly classifies the product.
 HS code classification rules:
 - Chapter 61: Knitted/crocheted clothing (T-shirts, sweaters)
-- Chapter 62: Woven clothing
-- Chapter 84: Machinery, computers (84713000 = laptops)
+- Chapter 62: Woven clothing and sarees
+- Chapter 84: Machinery, computers (84713000 = laptops/computers)
 - Chapter 85: Electronics
 - Chapter 87: Vehicles and parts
 - Chapter 30: Pharmaceuticals
@@ -122,44 +118,53 @@ HS code classification rules:
 - Chapter 42: Leather articles
 - Chapter 73: Iron/Steel articles
 - Chapter 83: Miscellaneous metal articles
-- Chapter 94: Furniture, lamps
+- Chapter 94: Furniture, lamps, lighting
 - Chapter 71: Precious stones
 
+Entries to check:
 {combos_text}
 
-Respond ONLY as valid JSON array. For each entry respond with:
+Respond ONLY as a valid JSON array. For each entry:
 {{
   "shipment_id": "...",
   "hs_code": "...",
   "product": "...",
-  "is_correct": true/false,
+  "is_correct": true or false,
   "reason": "brief explanation",
-  "correct_hs_chapter": "XX (chapter name)"
+  "correct_hs_chapter": "XX - chapter name"
 }}
 
-Return ONLY the JSON array, no other text."""
+Return ONLY the JSON array with no other text, no markdown, no backticks."""
 
     response = call_gemini(prompt, task_name="hs_code_validation")
+
+    # Always safe to set description now because _ensure_task_key was called inside call_gemini
     usage_log["breakdown_by_task"]["hs_code_validation"]["description"] = (
         "Batch validation of unique HS code + product description combinations"
     )
 
-    # Parse response
+    if response.startswith("[LLM"):
+        print(f"   LLM skipped: {response}")
+        return anomalies
+
     try:
-        # Clean markdown code blocks if present
         clean = response.strip()
-        if clean.startswith("```"):
-            clean = clean.split("```")[1]
-            if clean.startswith("json"):
-                clean = clean[4:]
-        clean = clean.strip()
+        # Strip markdown code fences if present
+        if "```" in clean:
+            parts = clean.split("```")
+            for part in parts:
+                part = part.strip()
+                if part.startswith("json"):
+                    part = part[4:].strip()
+                if part.startswith("[") or part.startswith("{"):
+                    clean = part
+                    break
 
         results = json.loads(clean)
 
         for item in results:
             if not item.get("is_correct", True):
                 counter[0] += 1
-                # Find all shipments with this mismatch
                 affected = shipments_df[
                     (shipments_df['hs_code'] == item['hs_code']) &
                     (shipments_df['product_description'] == item['product'])
@@ -184,24 +189,25 @@ Return ONLY the JSON array, no other text."""
                         },
                         "severity": "critical",
                         "recommendation": (
-                            f"Re-classify under correct HS chapter: {item.get('correct_hs_chapter', 'see above')}. "
-                            "File amendment with customs. Wrong classification attracts penalties of ₹50K-₹2L."
+                            f"Re-classify under correct HS chapter: "
+                            f"{item.get('correct_hs_chapter', 'see above')}. "
+                            "File amendment with customs. Penalty: Rs 50K-2L."
                         ),
                         "estimated_penalty_usd": 6000,
                         "detection_method": "LLM: Gemini 1.5 Flash HS classification check"
                     })
+
     except (json.JSONDecodeError, KeyError, Exception) as e:
-        print(f"   ⚠️  LLM response parsing error: {e}")
-        print(f"   Raw response: {response[:200]}...")
+        print(f"   LLM response parsing error: {e}")
 
     print(f"   LLM: {len(anomalies)} HS code mismatches found")
     return anomalies
 
 
 def generate_executive_summary(anomaly_report: dict) -> str:
-    """Generate a 1-page executive summary for non-technical Operations Head."""
+    """Generate a 1-page executive summary."""
+    _ensure_task_key("executive_summary")
 
-    # Build concise summary for LLM — don't send raw JSON
     total = len(anomaly_report.get("anomalies", []))
     by_severity = {}
     by_category = {}
@@ -241,17 +247,21 @@ TOP 5 HIGHEST-RISK ISSUES:
 
 Write a 400-500 word executive summary with these sections:
 1. **Executive Overview** (2-3 sentences)
-2. **Top 3 Most Urgent Issues** (with specific shipment IDs and business impact in INR)
+2. **Top 3 Most Urgent Issues** (with specific shipment IDs and impact in INR, 1 USD = Rs 83)
 3. **Identified Trends** (payment patterns, volume anomalies)
-4. **Estimated Financial Exposure** (penalties, working capital)
-5. **Recommended Immediate Actions** (3-4 bullet points, actionable)
+4. **Estimated Financial Exposure** (penalties, working capital at risk)
+5. **Recommended Immediate Actions** (3-4 bullet points)
 
-Tone: Professional, non-technical, action-oriented. Mention rupee amounts where relevant (1 USD ≈ ₹83)."""
+Tone: Professional, non-technical, action-oriented."""
 
     summary = call_gemini(prompt, task_name="executive_summary")
+
     usage_log["breakdown_by_task"]["executive_summary"]["description"] = (
         "One-page executive summary for Operations Head"
     )
+
+    if summary.startswith("[LLM"):
+        return "## Executive Summary\n\nLLM unavailable. Please set GEMINI_API_KEY in Streamlit Secrets to generate the executive summary."
 
     return summary
 
@@ -260,19 +270,11 @@ def save_llm_usage_report():
     """Save the LLM usage tracking report."""
     if latencies:
         usage_log["avg_latency_ms"] = int(sum(latencies) / len(latencies))
-    # Gemini 1.5 Flash free tier = $0 up to 1M tokens/day
     usage_log["estimated_cost_usd"] = 0.0
     usage_log["notes"] += f" | {usage_log['total_calls']} total calls made."
 
     path = os.path.join(OUTPUT_DIR, 'llm_usage_report.json')
     with open(path, 'w') as f:
         json.dump(usage_log, f, indent=2)
-    print(f"   ✅ llm_usage_report.json saved")
+    print(f"   LLM usage report saved")
     return usage_log
-
-
-if __name__ == "__main__":
-    df = pd.read_csv(os.path.join(DATA_DIR, 'shipments.csv'))
-    results = validate_hs_codes(df)
-    print(f"\nLLM HS validation complete. Found {len(results)} mismatches.")
-    save_llm_usage_report()
