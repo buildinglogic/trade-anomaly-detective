@@ -37,8 +37,8 @@ usage_log = {
 latencies = []
 
 
-def _ensure_task_key(task_name: str):
-    """Make sure the task key exists in breakdown_by_task before accessing it."""
+def _ensure_task_exists(task_name: str):
+    """Ensure task key exists in breakdown_by_task before accessing."""
     if task_name not in usage_log["breakdown_by_task"]:
         usage_log["breakdown_by_task"][task_name] = {
             "calls": 0,
@@ -49,8 +49,8 @@ def _ensure_task_key(task_name: str):
 
 def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
     """Call Gemini API with retry logic and usage tracking."""
-    _ensure_task_key(task_name)
-
+    _ensure_task_exists(task_name)
+    
     if not GEMINI_API_KEY:
         return "[LLM UNAVAILABLE - Set GEMINI_API_KEY in Streamlit Secrets]"
 
@@ -137,19 +137,19 @@ Respond ONLY as a valid JSON array. For each entry:
 Return ONLY the JSON array with no other text, no markdown, no backticks."""
 
     response = call_gemini(prompt, task_name="hs_code_validation")
-
-    # Always safe to set description now because _ensure_task_key was called inside call_gemini
+    
+    # Safe to set description now - _ensure_task_exists was called in call_gemini
+    _ensure_task_exists("hs_code_validation")  # Double-check for safety
     usage_log["breakdown_by_task"]["hs_code_validation"]["description"] = (
         "Batch validation of unique HS code + product description combinations"
     )
 
     if response.startswith("[LLM"):
-        print(f"   LLM skipped: {response}")
+        print(f"   ⚠️ LLM skipped: {response}")
         return anomalies
 
     try:
         clean = response.strip()
-        # Strip markdown code fences if present
         if "```" in clean:
             parts = clean.split("```")
             for part in parts:
@@ -191,14 +191,14 @@ Return ONLY the JSON array with no other text, no markdown, no backticks."""
                         "recommendation": (
                             f"Re-classify under correct HS chapter: "
                             f"{item.get('correct_hs_chapter', 'see above')}. "
-                            "File amendment with customs. Penalty: Rs 50K-2L."
+                            "File amendment with customs. Penalty: ₹50K-₹2L."
                         ),
                         "estimated_penalty_usd": 6000,
                         "detection_method": "LLM: Gemini 1.5 Flash HS classification check"
                     })
 
     except (json.JSONDecodeError, KeyError, Exception) as e:
-        print(f"   LLM response parsing error: {e}")
+        print(f"   ⚠️ LLM response parsing error: {e}")
 
     print(f"   LLM: {len(anomalies)} HS code mismatches found")
     return anomalies
@@ -206,8 +206,8 @@ Return ONLY the JSON array with no other text, no markdown, no backticks."""
 
 def generate_executive_summary(anomaly_report: dict) -> str:
     """Generate a 1-page executive summary."""
-    _ensure_task_key("executive_summary")
-
+    _ensure_task_exists("executive_summary")
+    
     total = len(anomaly_report.get("anomalies", []))
     by_severity = {}
     by_category = {}
@@ -247,7 +247,7 @@ TOP 5 HIGHEST-RISK ISSUES:
 
 Write a 400-500 word executive summary with these sections:
 1. **Executive Overview** (2-3 sentences)
-2. **Top 3 Most Urgent Issues** (with specific shipment IDs and impact in INR, 1 USD = Rs 83)
+2. **Top 3 Most Urgent Issues** (with specific shipment IDs and impact in INR, 1 USD = ₹83)
 3. **Identified Trends** (payment patterns, volume anomalies)
 4. **Estimated Financial Exposure** (penalties, working capital at risk)
 5. **Recommended Immediate Actions** (3-4 bullet points)
@@ -255,13 +255,14 @@ Write a 400-500 word executive summary with these sections:
 Tone: Professional, non-technical, action-oriented."""
 
     summary = call_gemini(prompt, task_name="executive_summary")
-
+    
+    _ensure_task_exists("executive_summary")  # Double-check
     usage_log["breakdown_by_task"]["executive_summary"]["description"] = (
         "One-page executive summary for Operations Head"
     )
 
     if summary.startswith("[LLM"):
-        return "## Executive Summary\n\nLLM unavailable. Please set GEMINI_API_KEY in Streamlit Secrets to generate the executive summary."
+        return "## Executive Summary\n\n⚠️ LLM unavailable. Please set GEMINI_API_KEY in Streamlit Secrets to generate the executive summary."
 
     return summary
 
@@ -276,5 +277,5 @@ def save_llm_usage_report():
     path = os.path.join(OUTPUT_DIR, 'llm_usage_report.json')
     with open(path, 'w') as f:
         json.dump(usage_log, f, indent=2)
-    print(f"   LLM usage report saved")
+    print(f"   ✅ llm_usage_report.json saved")
     return usage_log
