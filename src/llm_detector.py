@@ -1,6 +1,6 @@
 """
 llm_detector.py
-Layer 3: LLM-powered detection using Google Gemini 1.5 Flash (FREE tier).
+Layer 3: LLM-powered detection using Google Gemini 1.5 Flash (NEW google-genai package).
 """
 
 import os
@@ -8,7 +8,6 @@ import json
 import time
 import datetime
 import pandas as pd
-import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -17,28 +16,36 @@ DATA_DIR   = os.path.join(os.path.dirname(__file__), '..', 'data')
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'output')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Get API key from Streamlit secrets (when deployed) or .env (when local)
+# Get API key from Streamlit secrets or .env
 GEMINI_API_KEY = ""
+
 try:
     import streamlit as st
     if hasattr(st, 'secrets') and "GEMINI_API_KEY" in st.secrets:
         GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-        print("✅ Using API key from Streamlit Secrets")
+        print(f"✅ Loaded API key from Streamlit Secrets")
 except:
     pass
 
-# Fallback to .env for local development
 if not GEMINI_API_KEY:
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
     if GEMINI_API_KEY:
-        print("✅ Using API key from .env file")
+        print(f"✅ Loaded API key from .env")
 
+# Configure the NEW google-genai client
+client = None
 if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
+    try:
+        from google import genai
+        client = genai.Client(api_key=GEMINI_API_KEY)
+        print("✅ Gemini client configured successfully")
+    except Exception as e:
+        print(f"❌ Error configuring Gemini: {e}")
+        client = None
 else:
-    print("⚠️ No GEMINI_API_KEY found in Streamlit Secrets or .env")
+    print("❌ No GEMINI_API_KEY found")
 
-MODEL_NAME = "gemini-1.5-flash"
+MODEL_NAME = "models/gemini-2.5-flash"
 
 usage_log = {
     "provider": "Google AI Studio",
@@ -55,7 +62,7 @@ latencies = []
 
 
 def _ensure_task_exists(task_name: str):
-    """Ensure task key exists in breakdown_by_task before accessing."""
+    """Ensure task key exists in breakdown_by_task."""
     if task_name not in usage_log["breakdown_by_task"]:
         usage_log["breakdown_by_task"][task_name] = {
             "calls": 0,
@@ -65,23 +72,25 @@ def _ensure_task_exists(task_name: str):
 
 
 def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
-    """Call Gemini API with retry logic and usage tracking."""
+    """Call Gemini API with NEW google-genai package."""
     _ensure_task_exists(task_name)
     
-    if not GEMINI_API_KEY:
-        return "[LLM UNAVAILABLE - Set GEMINI_API_KEY in Streamlit Secrets]"
-
-    model = genai.GenerativeModel(MODEL_NAME)
+    if not client:
+        return "[LLM UNAVAILABLE - Set GEMINI_API_KEY in Streamlit Secrets or .env]"
 
     for attempt in range(max_retries):
         try:
             start = time.time()
-            response = model.generate_content(prompt)
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=prompt
+            )
             latency_ms = int((time.time() - start) * 1000)
             latencies.append(latency_ms)
 
             text = response.text
 
+            # Approximate token counts
             input_tokens  = len(prompt.split()) * 4 // 3
             output_tokens = len(text.split()) * 4 // 3
 
@@ -95,6 +104,7 @@ def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
             return text
 
         except Exception as e:
+            print(f"⚠️ API call attempt {attempt+1} failed: {e}")
             if attempt < max_retries - 1:
                 time.sleep(2 ** attempt)
                 continue
@@ -155,8 +165,6 @@ Return ONLY the JSON array with no other text, no markdown, no backticks."""
 
     response = call_gemini(prompt, task_name="hs_code_validation")
     
-    # Safe to set description now - _ensure_task_exists was called in call_gemini
-    _ensure_task_exists("hs_code_validation")  # Double-check for safety
     usage_log["breakdown_by_task"]["hs_code_validation"]["description"] = (
         "Batch validation of unique HS code + product description combinations"
     )
@@ -222,7 +230,7 @@ Return ONLY the JSON array with no other text, no markdown, no backticks."""
 
 
 def generate_executive_summary(anomaly_report: dict) -> str:
-    """Generate a 1-page executive summary."""
+    """Generate executive summary."""
     _ensure_task_exists("executive_summary")
     
     total = len(anomaly_report.get("anomalies", []))
@@ -273,19 +281,18 @@ Tone: Professional, non-technical, action-oriented."""
 
     summary = call_gemini(prompt, task_name="executive_summary")
     
-    _ensure_task_exists("executive_summary")  # Double-check
     usage_log["breakdown_by_task"]["executive_summary"]["description"] = (
         "One-page executive summary for Operations Head"
     )
 
     if summary.startswith("[LLM"):
-        return "## Executive Summary\n\n⚠️ LLM unavailable. Please set GEMINI_API_KEY in Streamlit Secrets to generate the executive summary."
+        return "## Executive Summary\n\n⚠️ LLM unavailable. Please set GEMINI_API_KEY in Streamlit Secrets."
 
     return summary
 
 
 def save_llm_usage_report():
-    """Save the LLM usage tracking report."""
+    """Save LLM usage report."""
     if latencies:
         usage_log["avg_latency_ms"] = int(sum(latencies) / len(latencies))
     usage_log["estimated_cost_usd"] = 0.0
