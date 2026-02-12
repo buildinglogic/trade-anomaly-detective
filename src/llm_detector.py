@@ -1,7 +1,7 @@
 """
 llm_detector.py
-Layer 3: LLM-powered detection using Groq (free tier, unlimited).
-FIXED: Using Groq instead of Gemini for reliability.
+Layer 3: LLM-powered detection using Groq Llama 3.3 70B.
+FIXED: Now properly loads .env file before checking for API key.
 """
 
 import os
@@ -9,39 +9,39 @@ import json
 import time
 import datetime
 import pandas as pd
+from pathlib import Path
+
+# ✅ CRITICAL FIX: Load .env file FIRST before checking environment
 from dotenv import load_dotenv
 
-load_dotenv()
+# Get project root (parent directory of src/)
+PROJECT_ROOT = Path(__file__).parent.parent
+env_path = PROJECT_ROOT / ".env"
+
+# Load the .env file into environment variables
+load_dotenv(env_path, override=True)
+
+# NOW get the API key from environment
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+
+# Debug output (shows in Streamlit console)
+print("=" * 70)
+print("🔍 llm_detector.py - API Key Loading:")
+print(f"   Project root: {PROJECT_ROOT}")
+print(f"   .env path: {env_path}")
+print(f"   .env exists: {env_path.exists()}")
+print(f"   API key loaded: {bool(GROQ_API_KEY)}")
+if GROQ_API_KEY:
+    print(f"   Key length: {len(GROQ_API_KEY)}")
+    print(f"   Key preview: {GROQ_API_KEY[:20]}...")
+    print("   ✅ API KEY READY!")
+else:
+    print("   ❌ NO API KEY - Check .env file contains GROQ_API_KEY=...")
+print("=" * 70)
 
 DATA_DIR   = os.path.join(os.path.dirname(__file__), '..', 'data')
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'output')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-# ─── API Key Loading ────────────────────────────────────────────────────────
-GROQ_API_KEY = ""
-
-# Try Streamlit secrets first
-try:
-    import streamlit as st
-    if hasattr(st, 'secrets') and "GROQ_API_KEY" in st.secrets:
-        GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
-        print(f"✅ Loaded API key from Streamlit Secrets")
-except:
-    pass
-
-# Try .env file
-if not GROQ_API_KEY:
-    GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-    if GROQ_API_KEY:
-        print(f"✅ Loaded API key from .env file")
-
-# Log status
-if not GROQ_API_KEY:
-    print("⚠️  WARNING: GROQ_API_KEY not found!")
-    print("   → Get free key: https://console.groq.com/keys")
-    print("   → Add to .env: GROQ_API_KEY=gsk_xxxxx")
-else:
-    print(f"✅ Groq API Key loaded (length: {len(GROQ_API_KEY)})")
 
 # ─── Client Initialization ──────────────────────────────────────────────────
 client = None
@@ -58,7 +58,7 @@ if GROQ_API_KEY:
 else:
     print("❌ Cannot initialize client: No API key")
 
-MODEL_NAME = "llama-3.3-70b-versatile", # Latest Groq model
+MODEL_NAME = "llama-3.3-70b-versatile"
 
 usage_log = {
     "provider": "Groq API",
@@ -73,6 +73,7 @@ usage_log = {
 }
 latencies = []
 
+# ... rest of your file stays exactly the same ...
 
 def _ensure_task_exists(task_name: str):
     """Ensure task key exists in breakdown_by_task."""

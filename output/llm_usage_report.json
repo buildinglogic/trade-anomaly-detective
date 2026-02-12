@@ -1,26 +1,26 @@
 {
-  "provider": "Google AI Studio",
-  "model": "models/gemini-2.5-flash",
-  "total_calls": 1,
+  "provider": "Groq API",
+  "model": "llama-3.3-70b-versatile",
+  "total_calls": 12,
   "total_tokens": {
-    "input": 377,
-    "output": 756,
-    "total": 1133
+    "input": 6374,
+    "output": 7741,
+    "total": 14115
   },
   "estimated_cost_usd": 0.0,
   "breakdown_by_task": {
     "hs_code_validation": {
-      "calls": 1,
-      "tokens": 1133,
+      "calls": 6,
+      "tokens": 9065,
       "description": "Batch validation of unique HS code + product description combinations"
     },
     "executive_summary": {
-      "calls": 0,
-      "tokens": 0,
+      "calls": 6,
+      "tokens": 5050,
       "description": "One-page executive summary for Operations Head"
     }
   },
-  "avg_latency_ms": 23752,
-  "timestamp": "2026-02-12T19:33:48.559842Z",
-  "notes": "Gemini 1.5 Flash - free tier. Cost effectively $0. | 1 total calls made."
+  "avg_latency_ms": 2259,
+  "timestamp": "2026-02-12T20:47:11.112126Z",
+  "notes": "Groq - Free tier, unlimited API calls. Cost: $0.00 | 2 total calls made. | 4 total calls made. | 6 total calls made. | 8 total calls made. | 10 total calls made. | 12 total calls made."
 }

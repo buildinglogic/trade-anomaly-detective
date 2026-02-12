@@ -10,10 +10,15 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 import json
-import os
 import sys
 import datetime
+import os
+from pathlib import Path
+from dotenv import load_dotenv
 
+# Load .env from project root (parent of src/)
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(env_path)
 # ── Path setup ──────────────────────────────────────────────────────────
 ROOT_DIR   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR   = os.path.join(ROOT_DIR, 'data')
