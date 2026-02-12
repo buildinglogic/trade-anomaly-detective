@@ -1,6 +1,6 @@
 """
 data_generator.py
-Generates synthetic Indian export trade data with 12 planted anomalies.
+Generates synthetic Indian export trade data with planted anomalies.
 Run: python src/data_generator.py
 """
 
@@ -21,7 +21,7 @@ os.makedirs(DATA_DIR, exist_ok=True)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  TABLE 3 — PRODUCT CATALOG (12 products)
+#  TABLE 3 — PRODUCT CATALOG
 # ═══════════════════════════════════════════════════════════════════════════
 def generate_product_catalog():
     products = [
@@ -106,7 +106,7 @@ def generate_product_catalog():
         {
             "product_id": "PROD-007",
             "product_description": "Leather Wallet Genuine Cow Hide",
-            "hs_code": "42021200",
+            "hs_code": "42021200",  # ✅ FIXED - was 42031000
             "hs_chapter": "42",
             "category": "Leather",
             "avg_unit_price_usd": 8.50,
@@ -119,7 +119,7 @@ def generate_product_catalog():
         {
             "product_id": "PROD-008",
             "product_description": "Black Pepper Ground Organic",
-            "hs_code": "09041100",
+            "hs_code": "09041100",  # ✅ FIXED - was 09042110
             "hs_chapter": "09",
             "category": "Food Products",
             "avg_unit_price_usd": 6.00,
@@ -158,7 +158,7 @@ def generate_product_catalog():
         {
             "product_id": "PROD-011",
             "product_description": "Embroidered Saree Silk",
-            "hs_code": "62114900",
+            "hs_code": "62114900",  # ✅ ALREADY CORRECT from previous fix
             "hs_chapter": "62",
             "category": "Textiles",
             "avg_unit_price_usd": 35.00,
@@ -189,7 +189,7 @@ def generate_product_catalog():
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  TABLE 2 — BUYERS (8 buyers)
+#  TABLE 2 — BUYERS
 # ═══════════════════════════════════════════════════════════════════════════
 def generate_buyers():
     buyers = [
@@ -273,10 +273,11 @@ def generate_buyers():
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  TABLE 4 — ROUTES (15 routes)
+#  TABLE 4 — ROUTES
 # ═══════════════════════════════════════════════════════════════════════════
 def generate_routes():
     routes = [
+        # Mundra (INMUN1) routes
         {"port_of_loading": "INMUN1", "port_of_discharge": "USLAX",
          "avg_transit_days": 28, "transit_range_min": 24, "transit_range_max": 34,
          "avg_freight_20ft_usd": 1400, "avg_freight_40ft_usd": 2200, "avg_freight_40hc_usd": 2400},
@@ -301,18 +302,21 @@ def generate_routes():
         {"port_of_loading": "INMUN1", "port_of_discharge": "ZACPT",
          "avg_transit_days": 20, "transit_range_min": 16, "transit_range_max": 25,
          "avg_freight_20ft_usd": 950, "avg_freight_40ft_usd": 1500, "avg_freight_40hc_usd": 1700},
+        # Nhava Sheva / JNPT (INNSA1) routes
         {"port_of_loading": "INNSA1", "port_of_discharge": "USLAX",
          "avg_transit_days": 30, "transit_range_min": 25, "transit_range_max": 36,
          "avg_freight_20ft_usd": 1450, "avg_freight_40ft_usd": 2300, "avg_freight_40hc_usd": 2500},
         {"port_of_loading": "INNSA1", "port_of_discharge": "DEHAM",
          "avg_transit_days": 23, "transit_range_min": 19, "transit_range_max": 28,
          "avg_freight_20ft_usd": 1150, "avg_freight_40ft_usd": 1850, "avg_freight_40hc_usd": 2050},
+        # Chennai (INMAA1) routes
         {"port_of_loading": "INMAA1", "port_of_discharge": "LKCMB",
          "avg_transit_days": 3, "transit_range_min": 2, "transit_range_max": 5,
          "avg_freight_20ft_usd": 200, "avg_freight_40ft_usd": 350, "avg_freight_40hc_usd": 400},
         {"port_of_loading": "INMAA1", "port_of_discharge": "SGSIN",
          "avg_transit_days": 10, "transit_range_min": 8, "transit_range_max": 13,
          "avg_freight_20ft_usd": 550, "avg_freight_40ft_usd": 880, "avg_freight_40hc_usd": 980},
+        # Bangalore ICD (INBLR4) routes
         {"port_of_loading": "INBLR4", "port_of_discharge": "AEJEA",
          "avg_transit_days": 12, "transit_range_min": 9, "transit_range_max": 16,
          "avg_freight_20ft_usd": 700, "avg_freight_40ft_usd": 1100, "avg_freight_40hc_usd": 1250},
@@ -330,9 +334,11 @@ def generate_routes():
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  TABLE 1 — SHIPMENTS (250 rows with 12 planted anomalies)
+#  TABLE 1 — SHIPMENTS (250 rows + 12 planted anomalies)
 # ═══════════════════════════════════════════════════════════════════════════
 def generate_shipments(products_df, buyers_df, routes_df):
+
+    # ── Helper lookups ──────────────────────────────────────────────────
     prod_by_id   = {r['product_id']: r for r in products_df.to_dict('records')}
     route_lookup = {}
     for r in routes_df.to_dict('records'):
@@ -340,6 +346,7 @@ def generate_shipments(products_df, buyers_df, routes_df):
 
     buyer_to_country = {b['buyer_name']: b['buyer_country'] for b in buyers_df.to_dict('records')}
 
+    # ── Port → destination mapping per buyer ───────────────────────────
     buyer_route_map = {
         "Global Mart Inc":      ("INMUN1",  "USLAX"),
         "Euro Trade GmbH":      ("INMUN1",  "DEHAM"),
@@ -350,9 +357,19 @@ def generate_shipments(products_df, buyers_df, routes_df):
         "Nippon Commerce KK":   ("INMUN1",  "JPTYO"),
         "African Goods Co":     ("INMUN1",  "ZACPT"),
     }
+    # Discharge ports not in routes.csv — add GBFXT as INMUN1 route
+    route_lookup[("INMUN1", "GBFXT")] = {
+        "avg_transit_days": 24, "transit_range_min": 20, "transit_range_max": 29,
+        "avg_freight_20ft_usd": 1200, "avg_freight_40ft_usd": 1900, "avg_freight_40hc_usd": 2100
+    }
+    route_lookup[("INNSA1", "GBFXT")] = {
+        "avg_transit_days": 24, "transit_range_min": 20, "transit_range_max": 29,
+        "avg_freight_20ft_usd": 1250, "avg_freight_40ft_usd": 1950, "avg_freight_40hc_usd": 2150
+    }
 
     shipping_lines    = ["Maersk", "MSC", "CMA CGM", "Hapag-Lloyd", "ONE"]
     container_types   = ["20ft", "40ft", "40ft HC"]
+    container_weights = {"20ft": 18000, "40ft": 26000, "40ft HC": 26000}  # max kg
     payment_terms_map = {
         "Global Mart Inc": "LC 60 days",
         "Euro Trade GmbH": "LC 30 days",
@@ -374,6 +391,7 @@ def generate_shipments(products_df, buyers_df, routes_df):
     buyers_list    = buyers_df['buyer_name'].tolist()
     products_list  = products_df['product_id'].tolist()
 
+    # ── Date range: Sep 2025 – Feb 2026 ────────────────────────────────
     start_date = datetime(2025, 9, 1)
     end_date   = datetime(2026, 2, 28)
     total_days = (end_date - start_date).days
@@ -381,9 +399,10 @@ def generate_shipments(products_df, buyers_df, routes_df):
     shipments = []
     TOTAL     = 250
 
+    # ── IDs reserved for planted anomalies ─────────────────────────────
     PLANTED_IDS = {
         "SHP-2025-0034",   # P-001 pricing math
-        "SHP-2025-0067",   # P-002 price below range
+        "SHP-2025-0067",   # P-002 price below range (dumping)
         "SHP-2025-0089",   # P-003 HS code mismatch
         "SHP-2025-0115",   # P-004 drawback on rejected
         "SHP-2025-0127",   # P-005 transit days spike
@@ -391,13 +410,13 @@ def generate_shipments(products_df, buyers_df, routes_df):
         "SHP-2025-0187",   # P-007 buyer payment delay
         "SHP-2025-0199",   # P-008 payment received but days=null
         "SHP-2025-0212",   # P-009 volume spike
-        "SHP-2025-0230",   # P-010 country volume spike
-        "SHP-2025-0241",   # P-011 insurance 2%
+        "SHP-2025-0230",   # P-010 country volume spike (Oct)
+        "SHP-2025-0241",   # P-011 insurance 2% instead of 0.2%
         "SHP-2025-0248",   # P-012 CIF but freight=0
     }
 
     def random_shipment(shipment_id, date=None):
-        """Generate a clean shipment row."""
+        """Generate a normal (clean) shipment row."""
         buyer  = random.choice(buyers_list)
         prod_id = random.choice(products_list)
         prod   = prod_by_id[prod_id]
@@ -414,6 +433,8 @@ def generate_shipments(products_df, buyers_df, routes_df):
         total_fob = round(qty * unit_price, 2)
 
         ctype = random.choice(container_types)
+        freight_key = f"avg_freight_{ctype.replace(' ', '_').lower()}_usd".replace("ft_hc", "ft_hc")
+        # normalise key
         freight_key_map = {"20ft": "avg_freight_20ft_usd",
                            "40ft": "avg_freight_40ft_usd",
                            "40ft HC": "avg_freight_40hc_usd"}
@@ -426,6 +447,10 @@ def generate_shipments(products_df, buyers_df, routes_df):
         incoterm = random.choices(
             ["FOB", "CIF", "EXW", "CFR"], weights=[50, 25, 15, 10]
         )[0]
+        if incoterm == "CIF":
+            pass  # freight already set — CIF means seller pays, which it does
+        elif incoterm == "EXW":
+            freight_cost = 0.0
 
         transit_days = random.randint(route['transit_range_min'], route['transit_range_max'])
 
@@ -436,7 +461,7 @@ def generate_shipments(products_df, buyers_df, routes_df):
         drawback_rate = prod['drawback_rate_pct']
         drawback_amount = round(total_fob * drawback_rate / 100, 2)
         if cstatus == "rejected":
-            drawback_amount = 0.0
+            drawback_amount = 0.0   # can't claim on rejected
 
         buyer_info = buyers_df[buyers_df['buyer_name'] == buyer].iloc[0]
         avg_pay_days = int(buyer_info['avg_payment_days'])
@@ -486,121 +511,151 @@ def generate_shipments(products_df, buyers_df, routes_df):
             "cha_name": random.choice(cha_names),
         }
 
-    # Generate 238 clean rows (250 - 12 planted)
+    # ── Generate 250 clean rows (skip planted IDs) ──────────────────────
     for i in range(1, TOTAL + 1):
         sid = f"SHP-2025-{i:04d}"
         if sid not in PLANTED_IDS:
             d = start_date + timedelta(days=random.randint(0, total_days))
             shipments.append(random_shipment(sid, date=d))
 
-    # ────── PLANT 12 ANOMALIES ──────────────────────────────────────────
-
-    # PLANTED-001: FOB math error
+    # ── PLANT ANOMALY 1 — Pricing: FOB math error ───────────────────────
+    # SHP-2025-0034: total_fob ≠ qty × unit_price
     s = random_shipment("SHP-2025-0034", date=datetime(2025, 10, 5))
     s["quantity"] = 2000
     s["unit_price_usd"] = 4.50
-    s["total_fob_usd"] = 10800.00  # Wrong! Should be 9000
+    s["total_fob_usd"] = 10800.00   # Should be 9000.00 — inflated by 1800
     s["buyer_name"] = "Global Mart Inc"
+    s["buyer_country"] = "USA"
     s["product_description"] = "Cotton T-shirts 100% knitted"
     s["hs_code"] = "61091000"
+    s["drawback_amount_usd"] = round(10800 * 2.0 / 100, 2)
     shipments.append(s)
 
-    # PLANTED-002: Price dumping
+    # ── PLANT ANOMALY 2 — Pricing: unit price dumping ────────────────────
+    # SHP-2025-0067: Cotton T-shirts at $0.80 (range min $3.00) – suspicious discounting
     s = random_shipment("SHP-2025-0067", date=datetime(2025, 10, 18))
     s["product_description"] = "Cotton T-shirts 100% knitted"
     s["hs_code"] = "61091000"
     s["quantity"] = 5000
-    s["unit_price_usd"] = 0.80  # Range min is 3.00!
+    s["unit_price_usd"] = 0.80   # WAY below min of 3.00
     s["total_fob_usd"] = round(5000 * 0.80, 2)
     s["buyer_name"] = "Gulf Distributors LLC"
+    s["buyer_country"] = "UAE"
+    s["drawback_rate_pct"] = 2.0
+    s["drawback_amount_usd"] = round(s["total_fob_usd"] * 2.0 / 100, 2)
     shipments.append(s)
 
-    # PLANTED-003: HS code mismatch
+    # ── PLANT ANOMALY 3 — Compliance: HS code mismatch ──────────────────
+    # SHP-2025-0089: Cotton T-shirts labelled with Electronics HS code 84713000 (computers)
     s = random_shipment("SHP-2025-0089", date=datetime(2025, 11, 3))
     s["product_description"] = "Cotton T-shirts 100% knitted"
-    s["hs_code"] = "84713000"  # Wrong! This is computers
+    s["hs_code"] = "84713000"   # WRONG — this is Laptops/Computers
     s["buyer_name"] = "Euro Trade GmbH"
+    s["buyer_country"] = "Germany"
     s["quantity"] = 3000
+    s["unit_price_usd"] = 4.50
+    s["total_fob_usd"] = round(3000 * 4.50, 2)
     shipments.append(s)
 
-    # PLANTED-004: Drawback on rejected
+    # ── PLANT ANOMALY 4 — Compliance: drawback on rejected shipment ──────
+    # SHP-2025-0115: customs_status=rejected but drawback_amount > 0
     s = random_shipment("SHP-2025-0115", date=datetime(2025, 11, 20))
     s["customs_status"] = "rejected"
-    s["drawback_amount_usd"] = 850.00  # Should be 0!
+    s["drawback_rate_pct"] = 2.5
+    s["drawback_amount_usd"] = 850.00  # Should be 0 if rejected
     s["buyer_name"] = "London Imports Ltd"
     shipments.append(s)
 
-    # PLANTED-005: Transit spike
+    # ── PLANT ANOMALY 5 — Route: transit days spike ──────────────────────
+    # SHP-2025-0127: INMUN1→AEJEA normally 6-11 days, this one is 45 days
     s = random_shipment("SHP-2025-0127", date=datetime(2025, 12, 1))
     s["port_of_loading"] = "INMUN1"
     s["port_of_discharge"] = "AEJEA"
     s["buyer_name"] = "Gulf Distributors LLC"
-    s["transit_days"] = 45  # Normal max: 11 days!
+    s["buyer_country"] = "UAE"
+    s["transit_days"] = 45  # 4x the max of 11 days!
     shipments.append(s)
 
-    # PLANTED-006: Freight 4x
+    # ── PLANT ANOMALY 6 — Route: freight cost 4x route average ──────────
+    # SHP-2025-0156: INMUN1→DEHAM avg freight 40ft = $1800, this shows $7200
     s = random_shipment("SHP-2025-0156", date=datetime(2025, 12, 15))
     s["port_of_loading"] = "INMUN1"
     s["port_of_discharge"] = "DEHAM"
     s["container_type"] = "40ft"
     s["buyer_name"] = "Euro Trade GmbH"
-    s["freight_cost_usd"] = 7200.00  # Avg is 1800!
+    s["buyer_country"] = "Germany"
+    s["freight_cost_usd"] = 7200.00  # 4x the avg of 1800
     shipments.append(s)
 
-    # PLANTED-007: Payment delay
+    # ── PLANT ANOMALY 7 — Payment: buyer suddenly paying 3x slower ───────
+    # SHP-2025-0187: Euro Trade GmbH avg_payment_days=32, this one = 110 days
     s = random_shipment("SHP-2025-0187", date=datetime(2026, 1, 5))
     s["buyer_name"] = "Euro Trade GmbH"
+    s["buyer_country"] = "Germany"
     s["payment_status"] = "received"
-    s["days_to_payment"] = 110  # Their avg: 32!
+    s["days_to_payment"] = 110  # 3.4x their avg of 32
     shipments.append(s)
 
-    # PLANTED-008: Received but null days
+    # ── PLANT ANOMALY 8 — Payment: received but days_to_payment = null ───
+    # SHP-2025-0199: payment_status=received but days_to_payment is None
     s = random_shipment("SHP-2025-0199", date=datetime(2026, 1, 12))
     s["payment_status"] = "received"
-    s["days_to_payment"] = None  # Contradiction!
+    s["days_to_payment"] = None  # Contradicts "received" status
     shipments.append(s)
 
-    # PLANTED-009: Volume spike
+    # ── PLANT ANOMALY 9 — Volume: buyer order spike 8x ──────────────────
+    # SHP-2025-0212: African Goods Co suddenly orders 80,000 units
+    # Their typical orders are 500-2000 units based on avg_order_value_usd=14000
     s = random_shipment("SHP-2025-0212", date=datetime(2026, 1, 18))
     s["buyer_name"] = "African Goods Co"
+    s["buyer_country"] = "South Africa"
     s["product_description"] = "Cotton T-shirts 100% knitted"
     s["hs_code"] = "61091000"
-    s["quantity"] = 80000  # 40x their usual!
+    s["quantity"] = 80000  # 40x their usual 500-2000 range
     s["unit_price_usd"] = 4.50
     s["total_fob_usd"] = round(80000 * 4.50, 2)
+    s["drawback_amount_usd"] = round(s["total_fob_usd"] * 2.0 / 100, 2)
+    s["container_type"] = "40ft HC"
     shipments.append(s)
 
-    # PLANTED-010: Country volume spike
+    # ── PLANT ANOMALY 10 — Volume: country monthly spike ─────────────────
+    # SHP-2025-0230: Add a massive UAE shipment in Oct making it unusual spike
+    # We also need to make sure Oct UAE has many normal ones first — handled by normal gen
     s = random_shipment("SHP-2025-0230", date=datetime(2025, 10, 28))
     s["buyer_name"] = "Gulf Distributors LLC"
+    s["buyer_country"] = "UAE"
     s["quantity"] = 95000
     s["unit_price_usd"] = 1.20
     s["product_description"] = "Basmati Rice Premium Grade"
     s["hs_code"] = "10063020"
     s["total_fob_usd"] = round(95000 * 1.20, 2)
+    s["drawback_amount_usd"] = round(s["total_fob_usd"] * 1.0 / 100, 2)
     shipments.append(s)
 
-    # PLANTED-011: Insurance 2% not 0.2%
+    # ── PLANT ANOMALY 11 — Cross-field: insurance 2% instead of 0.2% ────
+    # SHP-2025-0241: insurance = 2% of FOB (10x the normal 0.2%)
     s = random_shipment("SHP-2025-0241", date=datetime(2026, 1, 25))
     s["quantity"] = 1000
     s["unit_price_usd"] = 4.50
     s["total_fob_usd"] = round(1000 * 4.50, 2)
-    s["insurance_usd"] = round(s["total_fob_usd"] * 0.02, 2)  # 2%!
+    s["insurance_usd"] = round(s["total_fob_usd"] * 0.02, 2)  # 2% not 0.2%
     s["product_description"] = "Cotton T-shirts 100% knitted"
     s["hs_code"] = "61091000"
     shipments.append(s)
 
-    # PLANTED-012: CIF but freight = 0
+    # ── PLANT ANOMALY 12 — Cross-field: CIF but freight = 0 ─────────────
+    # SHP-2025-0248: incoterm=CIF but freight_cost=0 (CIF means seller pays freight)
     s = random_shipment("SHP-2025-0248", date=datetime(2026, 2, 5))
     s["incoterm"] = "CIF"
-    s["freight_cost_usd"] = 0.0  # Wrong! CIF seller pays!
+    s["freight_cost_usd"] = 0.0  # WRONG — CIF seller must pay freight
     shipments.append(s)
 
+    # ── Shuffle and save ─────────────────────────────────────────────────
     random.shuffle(shipments)
     df = pd.DataFrame(shipments)
     df = df.sort_values("date").reset_index(drop=True)
     df.to_csv(os.path.join(DATA_DIR, 'shipments.csv'), index=False)
-    print(f"✅ shipments.csv: {len(df)} rows with 12 planted anomalies")
+    print(f"✅ shipments.csv: {len(df)} rows")
     return df
 
 
@@ -615,7 +670,7 @@ def save_planted_anomalies():
             "category": "pricing",
             "sub_type": "fob_math_error",
             "description": "total_fob_usd ($10,800) ≠ quantity (2000) × unit_price ($4.50 = $9,000). Inflated by $1,800.",
-            "why_this_matters": "Inflated FOB increases drawback claim. Customs penalty: ₹1-5 lakh.",
+            "why_this_matters": "Inflated FOB increases drawback claim. At 2% drawback, exporter claims $216 extra per shipment. Customs penalty: ₹1-5 lakh per incident.",
             "estimated_penalty_usd": 5000,
             "severity": "critical"
         },
@@ -624,8 +679,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0067",
             "category": "pricing",
             "sub_type": "price_below_range",
-            "description": "Cotton T-shirts unit price $0.80 is 73% below minimum of $3.00. Suspicious discounting.",
-            "why_this_matters": "Under-invoicing to reduce duties. FEMA violation risk: ₹2-10 lakh.",
+            "description": "Cotton T-shirts unit price $0.80 is 73% below the product minimum of $3.00. Gulf Distributors LLC receiving suspicious discounting.",
+            "why_this_matters": "Under-invoicing to reduce customs duty for buyer. Exporter may be violating FEMA/transfer pricing rules. Penalty: ₹2-10 lakh.",
             "estimated_penalty_usd": 8000,
             "severity": "critical"
         },
@@ -634,8 +689,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0089",
             "category": "compliance",
             "sub_type": "hs_code_mismatch",
-            "description": "Cotton T-shirts (Chapter 61) exported under HS code 84713000 (Laptops - Chapter 84).",
-            "why_this_matters": "Wrong duty rate applied. Penalty: ₹50K-₹2L + goods seized.",
+            "description": "Cotton T-shirts (textile, Chapter 61) exported under HS code 84713000 (Laptops/Computers, Chapter 84).",
+            "why_this_matters": "Wrong duty rate applied. Electronics attract 0% BCD while textiles attract 10-20%. Misclassification penalty: ₹50K-₹2L + goods seized.",
             "estimated_penalty_usd": 6000,
             "severity": "critical"
         },
@@ -644,8 +699,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0115",
             "category": "compliance",
             "sub_type": "drawback_on_rejected",
-            "description": "Drawback of $850 claimed on rejected shipment. Drawback ineligible for rejected cargo.",
-            "why_this_matters": "Fraudulent drawback claim. Recovery + penalty up to 200%. Risk: ₹1.5-3 lakh.",
+            "description": "Drawback of $850 claimed on a shipment with customs_status = 'rejected'. Drawback is not eligible for rejected shipments.",
+            "why_this_matters": "Fraudulent drawback claim. Recovery + 15% interest + penalty up to 200% of drawback amount. Risk: ₹1.5-3 lakh.",
             "estimated_penalty_usd": 4000,
             "severity": "high"
         },
@@ -654,8 +709,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0127",
             "category": "route_logistics",
             "sub_type": "transit_days_spike",
-            "description": "INMUN1→AEJEA normal range 6-11 days. This shipment: 45 days (4x maximum).",
-            "why_this_matters": "Unexplained delay suggests port hold or re-routing. Demurrage risk: ₹80K.",
+            "description": "INMUN1→AEJEA (UAE) route normal range: 6-11 days. This shipment took 45 days — 4x the maximum.",
+            "why_this_matters": "Unexplained transit delay suggests cargo held at port, re-routing through sanctioned port, or documentation issues. Risk of ₹80K demurrage.",
             "estimated_penalty_usd": 3000,
             "severity": "high"
         },
@@ -664,8 +719,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0156",
             "category": "route_logistics",
             "sub_type": "freight_cost_spike",
-            "description": "INMUN1→DEHAM 40ft avg freight $1,800. This shows $7,200 (4x average).",
-            "why_this_matters": "Inflated freight increases CIF value. Margin loss: $5,400 per shipment.",
+            "description": "INMUN1→DEHAM 40ft container avg freight $1,800. This shipment shows $7,200 — exactly 4x the average.",
+            "why_this_matters": "Inflated freight = inflated CIF value = lower import duty for buyer OR kickback to freight forwarder. Margin loss: $5,400 per shipment.",
             "estimated_penalty_usd": 5400,
             "severity": "high"
         },
@@ -674,8 +729,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0187",
             "category": "payment",
             "sub_type": "payment_behavior_change",
-            "description": "Euro Trade GmbH avg_payment_days = 32. This shipment: 110 days (3.4x average).",
-            "why_this_matters": "Buyer financial stress. Working capital blocked extra 78 days. Bad debt risk.",
+            "description": "Euro Trade GmbH avg_payment_days = 32. This shipment: days_to_payment = 110 days (3.4x their historical average).",
+            "why_this_matters": "Buyer experiencing financial stress or deliberately delaying. Cash flow risk: working capital blocked for extra 78 days. Risk: bad debt.",
             "estimated_penalty_usd": 2000,
             "severity": "high"
         },
@@ -684,8 +739,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0199",
             "category": "payment",
             "sub_type": "received_null_days",
-            "description": "payment_status = 'received' but days_to_payment = NULL. Contradictory data.",
-            "why_this_matters": "Data integrity issue. Accounting audit risk.",
+            "description": "payment_status = 'received' but days_to_payment is NULL. Contradictory data — payment cannot be received without a date.",
+            "why_this_matters": "Data integrity issue. Could be masking an actual unpaid receivable in the books. Accounting audit risk.",
             "estimated_penalty_usd": 1000,
             "severity": "medium"
         },
@@ -694,8 +749,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0212",
             "category": "volume",
             "sub_type": "buyer_volume_spike",
-            "description": "African Goods Co avg order $14,000. This order: 80,000 units = $360,000 (26x average).",
-            "why_this_matters": "Possible fictitious transaction or money laundering. FEMA scrutiny. Risk: ₹5-20 lakh.",
+            "description": "African Goods Co (avg order $14,000) suddenly places order of 80,000 units of Cotton T-shirts = $360,000. ~26x their average order value.",
+            "why_this_matters": "Possible fictitious transaction, money laundering, or end-user diversion. Triggers FEMA/ECGC scrutiny. Risk: ₹5-20 lakh.",
             "estimated_penalty_usd": 15000,
             "severity": "critical"
         },
@@ -704,8 +759,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0230",
             "category": "volume",
             "sub_type": "country_volume_spike",
-            "description": "UAE single October shipment: 95,000 units Basmati Rice ($114,000) — anomalous spike.",
-            "why_this_matters": "Possible re-export to sanctioned countries. Embargo compliance risk.",
+            "description": "UAE (Gulf Distributors LLC) October 2025 shows single shipment of 95,000 units Basmati Rice ($114,000) — far above monthly UAE average.",
+            "why_this_matters": "Could indicate stockpiling before embargo, re-export to sanctioned countries (Iran, nearby), or fraudulent invoicing.",
             "estimated_penalty_usd": 10000,
             "severity": "critical"
         },
@@ -714,8 +769,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0241",
             "category": "cross_field",
             "sub_type": "insurance_rate_error",
-            "description": "Insurance = $90 on FOB $4,500 = 2.0% rate. Normal is ~0.2%. 10x overcharge.",
-            "why_this_matters": "Inflated CIF value. Unnecessary cost: ₹5K-₹40K.",
+            "description": "Insurance = $90 on FOB $4,500 = 2.0% rate. Normal is ~0.2%. Insurance overcharged by 10x.",
+            "why_this_matters": "Inflated insurance increases CIF value, affecting buyer's import duty base. Also overpayment to insurer = ₹5K-₹40K unnecessary cost.",
             "estimated_penalty_usd": 500,
             "severity": "medium"
         },
@@ -724,8 +779,8 @@ def save_planted_anomalies():
             "shipment_id": "SHP-2025-0248",
             "category": "cross_field",
             "sub_type": "cif_zero_freight",
-            "description": "incoterm = CIF but freight_cost_usd = 0. CIF requires seller to pay freight.",
-            "why_this_matters": "Contract violation or hidden cost splitting. Delivery responsibility dispute.",
+            "description": "incoterm = CIF but freight_cost_usd = 0. Under CIF, the seller is contractually obligated to pay freight.",
+            "why_this_matters": "Either the shipment cost is being hidden/split, or the contract terms are violated. Buyer may dispute delivery responsibility. Legal risk.",
             "estimated_penalty_usd": 2500,
             "severity": "high"
         },
@@ -748,4 +803,4 @@ if __name__ == "__main__":
     save_planted_anomalies()
     print(f"\n✅ All data generated in /data folder")
     print(f"   Shipments: {len(shipments_df)}")
-    print(f"   Planted anomalies: 12 across 6 categories\n")
+    print(f"   Planted anomalies: 12 across 6 categories")
