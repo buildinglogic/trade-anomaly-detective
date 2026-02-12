@@ -6,19 +6,19 @@
 
 Executive Summary:
 
-As part of our ongoing trade compliance efforts, we have conducted an analysis of 250 shipments, identifying 20 anomalies that pose a significant risk to our organization. Our review has uncovered critical issues that require immediate attention to mitigate potential penalties and financial losses. The findings of this analysis are summarized below, highlighting key areas of concern and recommended actions to ensure compliance and minimize risk.
+As part of our ongoing trade compliance efforts, we have conducted an analysis of our recent shipments, identifying potential anomalies that may expose our organization to regulatory risks and financial penalties. Our review of 250 shipments has revealed 21 anomalies, highlighting areas that require immediate attention to mitigate potential losses. The total penalty risk associated with these anomalies is approximately $52,550, which translates to ₹4,371,150 (based on an exchange rate of 1 USD = ₹83).
 
 The top 3 most urgent issues that require immediate attention are: 
-1. SHP-2025-0089, where an incorrect HS code was used, potentially attracting a penalty of approximately ₹4,465,500 (USD 53,550 * ₹83), 
-2. SHP-2025-0034, which involves a FOB mismatch resulting in a potential loss of ₹7,44,000 (USD 9,000 * ₹83), and 
-3. SHP-2025-0067, where the unit price of Cotton T-shirts is significantly lower than the mean price, potentially indicating an error in pricing or classification.
+1. SHP-2025-0089, where an incorrect HS code classification may result in significant penalties, with a potential impact of ₹249,900 (approximately $3,000).
+2. SHP-2025-0034, which involves a FOB mismatch, resulting in a potential discrepancy of ₹732,000 (approximately $8,800).
+3. SHP-2025-0067, where the unit price of Cotton T-shirts is significantly lower than the mean price, potentially indicating an error in pricing, with a potential impact of ₹83,000 (approximately $1,000).
 
-Our analysis has identified trends indicating discrepancies in pricing, compliance, and payment categories, as well as issues related to route logistics. These trends suggest a need for enhanced monitoring and verification of shipment data to prevent similar anomalies in the future.
+Our analysis has identified trends suggesting inconsistencies in payment terms, route logistics, and compliance documentation. These inconsistencies may be indicative of underlying process issues that require review and rectification. Furthermore, the high incidence of payment-related anomalies (10 out of 21) suggests a need for enhanced scrutiny of payment terms and procedures.
 
-The total potential penalty risk associated with these anomalies is approximately ₹4,465,500. To mitigate this risk, we recommend taking the following immediate actions:
-* Conduct a thorough review of HS codes used in recent shipments to ensure accuracy and compliance
-* Verify FOB values for all shipments to prevent mismatches and potential losses
-* Implement additional checks on unit prices for high-risk products, such as Cotton T-shirts, to prevent errors in pricing or classification
-* Develop a corrective action plan to address the root causes of these anomalies and prevent recurrence in the future.
+The financial exposure associated with these anomalies is substantial, with a total potential penalty of ₹4,371,150. To mitigate this risk, we recommend the following immediate actions:
+* Conduct a thorough review of HS code classifications to ensure accuracy and compliance.
+* Verify FOB values to ensure consistency with calculated values.
+* Implement enhanced payment term scrutiny to prevent discrepancies.
+* Develop a corrective action plan to address the identified anomalies and prevent future occurrences.
 
-By addressing these urgent issues and implementing corrective measures, we can minimize potential penalties, reduce financial losses, and ensure compliance with trade regulations.
+By taking prompt action to address these issues, we can minimize our financial exposure and ensure compliance with regulatory requirements, ultimately protecting our organization's reputation and bottom line.

@@ -10,6 +10,25 @@ import time
 import datetime
 import pandas as pd
 from pathlib import Path
+import streamlit as st
+from pathlib import Path
+from dotenv import load_dotenv
+
+# ✅ Try Streamlit secrets FIRST (for cloud deployment)
+try:
+    GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
+    print("✅ Loaded API key from Streamlit secrets")
+except:
+    # ✅ Fallback to .env (for local development)
+    PROJECT_ROOT = Path(__file__).parent.parent
+    env_path = PROJECT_ROOT / ".env"
+    load_dotenv(env_path, override=True)
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+    
+    if GROQ_API_KEY:
+        print("✅ Loaded API key from .env")
+    else:
+        print("❌ NO API KEY FOUND")
 
 # ✅ CRITICAL FIX: Load .env file FIRST before checking environment
 from dotenv import load_dotenv
