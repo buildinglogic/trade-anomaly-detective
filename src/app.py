@@ -3,19 +3,6 @@ app.py
 Streamlit dashboard for Trade Shipment Anomaly Detective.
 Run: streamlit run src/app.py
 """
-import streamlit as st
-
-st.write("### 🔍 Secrets Debug")
-try:
-    key = st.secrets.get("GROQ_API_KEY", "NOT FOUND")
-    if key != "NOT FOUND":
-        st.success(f"✅ Key found! Length: {len(key)}, Starts: {key[:20]}...")
-    else:
-        st.error("❌ Key not found in secrets")
-        st.write(f"Available keys: {list(st.secrets.keys())}")
-except Exception as e:
-    st.error(f"❌ Error: {e}")
-st.write("---") 
 
 import streamlit as st
 import pandas as pd
@@ -140,7 +127,7 @@ def run_full_analysis():
         )
         st.success(f"✅ Statistical: {len(stat_anomalies)} anomalies found")
 
-    with st.spinner("🤖 Step 4/5: Layer 3 — LLM detection (Gemini)..."):
+    with st.spinner("🤖 Step 4/5: Layer 3 — LLM detection (Groq)..."):
         from llm_detector import validate_hs_codes, generate_executive_summary, save_llm_usage_report
         llm_anomalies = validate_hs_codes(shipments_df)
         st.success(f"✅ LLM: {len(llm_anomalies)} HS code issues found")
@@ -198,7 +185,7 @@ with st.sidebar:
     st.divider()
     st.subheader("📡 System Info")
     st.caption(f"Data: {'✅ Loaded' if data_exists() else '❌ Not generated'}")
-    st.caption(f"LLM: Gemini 1.5 Flash")
+    st.caption(f"LLM: Groq")
     st.caption(f"Statistical: Z-scores (σ=2.5)")
     st.caption(f"Updated: {datetime.datetime.now().strftime('%H:%M:%S')}")
 
