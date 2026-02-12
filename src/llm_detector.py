@@ -1,6 +1,7 @@
 """
 llm_detector.py
-Layer 3: LLM-powered detection using Google Gemini 1.5 Flash (NEW google-genai package).
+Layer 3: LLM-powered detection using Groq (free tier, unlimited).
+FIXED: Using Groq instead of Gemini for reliability.
 """
 
 import os
@@ -16,39 +17,51 @@ DATA_DIR   = os.path.join(os.path.dirname(__file__), '..', 'data')
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'output')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Get API key from Streamlit secrets or .env
-GEMINI_API_KEY = ""
+# ─── API Key Loading ────────────────────────────────────────────────────────
+GROQ_API_KEY = ""
 
+# Try Streamlit secrets first
 try:
     import streamlit as st
-    if hasattr(st, 'secrets') and "GEMINI_API_KEY" in st.secrets:
-        GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+    if hasattr(st, 'secrets') and "GROQ_API_KEY" in st.secrets:
+        GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
         print(f"✅ Loaded API key from Streamlit Secrets")
 except:
     pass
 
-if not GEMINI_API_KEY:
-    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-    if GEMINI_API_KEY:
-        print(f"✅ Loaded API key from .env")
+# Try .env file
+if not GROQ_API_KEY:
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+    if GROQ_API_KEY:
+        print(f"✅ Loaded API key from .env file")
 
-# Configure the NEW google-genai client
-client = None
-if GEMINI_API_KEY:
-    try:
-        from google import genai
-        client = genai.Client(api_key=GEMINI_API_KEY)
-        print("✅ Gemini client configured successfully")
-    except Exception as e:
-        print(f"❌ Error configuring Gemini: {e}")
-        client = None
+# Log status
+if not GROQ_API_KEY:
+    print("⚠️  WARNING: GROQ_API_KEY not found!")
+    print("   → Get free key: https://console.groq.com/keys")
+    print("   → Add to .env: GROQ_API_KEY=gsk_xxxxx")
 else:
-    print("❌ No GEMINI_API_KEY found")
+    print(f"✅ Groq API Key loaded (length: {len(GROQ_API_KEY)})")
 
-MODEL_NAME = "models/gemini-2.5-flash"
+# ─── Client Initialization ──────────────────────────────────────────────────
+client = None
+if GROQ_API_KEY:
+    try:
+        from groq import Groq
+        client = Groq(api_key=GROQ_API_KEY)
+        print("✅ Groq client configured successfully")
+    except ImportError:
+        print("❌ groq package not installed")
+        print("   → Run: pip install groq")
+    except Exception as e:
+        print(f"❌ Error configuring Groq: {e}")
+else:
+    print("❌ Cannot initialize client: No API key")
+
+MODEL_NAME = "llama-3.3-70b-versatile", # Latest Groq model
 
 usage_log = {
-    "provider": "Google AI Studio",
+    "provider": "Groq API",
     "model": MODEL_NAME,
     "total_calls": 0,
     "total_tokens": {"input": 0, "output": 0, "total": 0},
@@ -56,7 +69,7 @@ usage_log = {
     "breakdown_by_task": {},
     "avg_latency_ms": 0,
     "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
-    "notes": "Gemini 1.5 Flash - free tier. Cost effectively $0."
+    "notes": "Groq - Free tier, unlimited API calls. Cost: $0.00"
 }
 latencies = []
 
@@ -71,29 +84,37 @@ def _ensure_task_exists(task_name: str):
         }
 
 
-def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
-    """Call Gemini API with NEW google-genai package."""
+def call_groq(prompt: str, task_name: str, max_retries: int = 3) -> str:
+    """Call Groq API with error handling."""
     _ensure_task_exists(task_name)
     
     if not client:
-        return "[LLM UNAVAILABLE - Set GEMINI_API_KEY in Streamlit Secrets or .env]"
+        return "[LLM UNAVAILABLE - Set GROQ_API_KEY in .env]"
 
     for attempt in range(max_retries):
         try:
             start = time.time()
-            response = client.models.generate_content(
+            
+            # Call the model
+            response = client.chat.completions.create(
                 model=MODEL_NAME,
-                contents=prompt
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.3,
+                max_tokens=2000
             )
+            
             latency_ms = int((time.time() - start) * 1000)
             latencies.append(latency_ms)
 
-            text = response.text
+            text = response.choices[0].message.content
 
-            # Approximate token counts
-            input_tokens  = len(prompt.split()) * 4 // 3
-            output_tokens = len(text.split()) * 4 // 3
+            # Token counts from response
+            input_tokens  = response.usage.prompt_tokens
+            output_tokens = response.usage.completion_tokens
 
+            # Update usage log
             usage_log["total_calls"] += 1
             usage_log["total_tokens"]["input"]  += input_tokens
             usage_log["total_tokens"]["output"] += output_tokens
@@ -101,14 +122,23 @@ def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
             usage_log["breakdown_by_task"][task_name]["calls"]  += 1
             usage_log["breakdown_by_task"][task_name]["tokens"] += (input_tokens + output_tokens)
 
+            print(f"✅ LLM call {usage_log['total_calls']} successful ({latency_ms}ms, {input_tokens+output_tokens} tokens)")
             return text
 
         except Exception as e:
-            print(f"⚠️ API call attempt {attempt+1} failed: {e}")
+            error_msg = str(e)
+            print(f"⚠️  API call attempt {attempt+1} failed: {error_msg[:80]}")
+            
+            # Don't retry on API key errors
+            if "API key" in error_msg or "authentication" in error_msg.lower():
+                return f"[LLM ERROR: Invalid API key. Check GROQ_API_KEY in .env]"
+            
             if attempt < max_retries - 1:
-                time.sleep(2 ** attempt)
-                continue
-            return f"[LLM ERROR: {str(e)}]"
+                wait_time = 2 ** attempt
+                print(f"   Retrying in {wait_time}s...")
+                time.sleep(wait_time)
+            else:
+                return f"[LLM ERROR: {error_msg[:100]}]"
 
     return "[LLM MAX RETRIES EXCEEDED]"
 
@@ -123,6 +153,10 @@ def validate_hs_codes(shipments_df: pd.DataFrame) -> list:
     ].drop_duplicates(subset=['hs_code', 'product_description'])
 
     print(f"   LLM: Validating {len(unique_combos)} unique HS code combinations...")
+
+    if len(unique_combos) == 0:
+        print(f"   ⚠️  No unique combinations to validate")
+        return anomalies
 
     combos_text = "\n".join([
         f"- ID:{row['shipment_id']} | HS:{row['hs_code']} | Product: {row['product_description']}"
@@ -146,53 +180,52 @@ HS code classification rules:
 - Chapter 73: Iron/Steel articles
 - Chapter 83: Miscellaneous metal articles
 - Chapter 94: Furniture, lamps, lighting
-- Chapter 71: Precious stones
 
 Entries to check:
 {combos_text}
 
-Respond ONLY as a valid JSON array. For each entry:
-{{
-  "shipment_id": "...",
-  "hs_code": "...",
-  "product": "...",
-  "is_correct": true or false,
-  "reason": "brief explanation",
-  "correct_hs_chapter": "XX - chapter name"
-}}
+Respond ONLY as a valid JSON array with this format:
+[
+  {{"shipment_id": "...", "hs_code": "...", "product": "...", "is_correct": true/false, "reason": "...", "correct_hs_chapter": "..."}}
+]
 
-Return ONLY the JSON array with no other text, no markdown, no backticks."""
+IMPORTANT: Return ONLY valid JSON. No markdown, no backticks, no explanation."""
 
-    response = call_gemini(prompt, task_name="hs_code_validation")
+    response = call_groq(prompt, task_name="hs_code_validation")
     
     usage_log["breakdown_by_task"]["hs_code_validation"]["description"] = (
         "Batch validation of unique HS code + product description combinations"
     )
 
     if response.startswith("[LLM"):
-        print(f"   ⚠️ LLM skipped: {response}")
+        print(f"   ⚠️  LLM skipped: {response}")
         return anomalies
 
     try:
         clean = response.strip()
+        
+        # Clean up markdown formatting if present
         if "```" in clean:
             parts = clean.split("```")
             for part in parts:
                 part = part.strip()
                 if part.startswith("json"):
                     part = part[4:].strip()
-                if part.startswith("[") or part.startswith("{"):
+                if part.startswith("["):
                     clean = part
                     break
 
         results = json.loads(clean)
+        
+        if not isinstance(results, list):
+            results = [results]
 
         for item in results:
             if not item.get("is_correct", True):
                 counter[0] += 1
                 affected = shipments_df[
-                    (shipments_df['hs_code'] == item['hs_code']) &
-                    (shipments_df['product_description'] == item['product'])
+                    (shipments_df['hs_code'] == item.get('hs_code', '')) &
+                    (shipments_df['product_description'] == item.get('product', ''))
                 ]
                 for _, row in affected.iterrows():
                     anomalies.append({
@@ -202,15 +235,15 @@ Return ONLY the JSON array with no other text, no markdown, no backticks."""
                         "category": "compliance",
                         "sub_type": "hs_code_mismatch",
                         "description": (
-                            f"HS code {item['hs_code']} does not match "
-                            f"'{item['product']}'. {item['reason']}"
+                            f"HS code {item.get('hs_code')} does not match "
+                            f"'{item.get('product')}'. {item.get('reason', '')}"
                         ),
                         "evidence": {
-                            "hs_code_used": item['hs_code'],
-                            "product": item['product'],
+                            "hs_code_used": item.get('hs_code'),
+                            "product": item.get('product'),
                             "llm_verdict": "INCORRECT",
                             "correct_chapter": item.get('correct_hs_chapter', 'Unknown'),
-                            "llm_reason": item['reason']
+                            "llm_reason": item.get('reason')
                         },
                         "severity": "critical",
                         "recommendation": (
@@ -219,19 +252,18 @@ Return ONLY the JSON array with no other text, no markdown, no backticks."""
                             "File amendment with customs. Penalty: ₹50K-₹2L."
                         ),
                         "estimated_penalty_usd": 6000,
-                        "detection_method": "LLM: Gemini 1.5 Flash HS classification check"
+                        "detection_method": "LLM: Groq Mixtral HS classification check"
                     })
 
     except (json.JSONDecodeError, KeyError, Exception) as e:
-        print(f"   ⚠️ LLM response parsing error: {e}")
+        print(f"   ⚠️  LLM response parsing error: {e}")
 
     print(f"   LLM: {len(anomalies)} HS code mismatches found")
     return anomalies
 
 
 def generate_executive_summary(anomaly_report: dict) -> str:
-    """Generate executive summary."""
-    _ensure_task_exists("executive_summary")
+    """Generate executive summary using LLM."""
     
     total = len(anomaly_report.get("anomalies", []))
     by_severity = {}
@@ -257,12 +289,12 @@ def generate_executive_summary(anomaly_report: dict) -> str:
         for a in top_anomalies
     ])
 
-    prompt = f"""You are a senior trade compliance consultant. Write a professional executive summary for the Operations Head of an Indian export company.
+    prompt = f"""You are a senior trade compliance consultant. Write a professional executive summary.
 
 ANALYSIS RESULTS:
-Total shipments analyzed: {anomaly_report.get('total_shipments', 0)}
-Total anomalies detected: {total}
-Total estimated penalty risk: ${total_penalty:,.0f}
+Total shipments: {anomaly_report.get('total_shipments', 0)}
+Total anomalies: {total}
+Total penalty risk: ${total_penalty:,.0f}
 
 BY SEVERITY: {json.dumps(by_severity)}
 BY CATEGORY: {json.dumps(by_category)}
@@ -270,29 +302,29 @@ BY CATEGORY: {json.dumps(by_category)}
 TOP 5 HIGHEST-RISK ISSUES:
 {top_desc}
 
-Write a 400-500 word executive summary with these sections:
-1. **Executive Overview** (2-3 sentences)
-2. **Top 3 Most Urgent Issues** (with specific shipment IDs and impact in INR, 1 USD = ₹83)
-3. **Identified Trends** (payment patterns, volume anomalies)
-4. **Estimated Financial Exposure** (penalties, working capital at risk)
-5. **Recommended Immediate Actions** (3-4 bullet points)
+Write a 300-400 word executive summary with:
+1. Executive Overview (2-3 sentences)
+2. Top 3 Most Urgent Issues (with shipment IDs and impact in INR where 1 USD = ₹83)
+3. Identified Trends
+4. Financial Exposure
+5. Immediate Actions (3-4 bullet points)
 
-Tone: Professional, non-technical, action-oriented."""
+Keep it professional and non-technical for Operations Head."""
 
-    summary = call_gemini(prompt, task_name="executive_summary")
+    summary = call_groq(prompt, task_name="executive_summary")
     
     usage_log["breakdown_by_task"]["executive_summary"]["description"] = (
         "One-page executive summary for Operations Head"
     )
 
     if summary.startswith("[LLM"):
-        return "## Executive Summary\n\n⚠️ LLM unavailable. Please set GEMINI_API_KEY in Streamlit Secrets."
+        return f"## Executive Summary\n\n⚠️ LLM unavailable.\n\n{summary}"
 
     return summary
 
 
 def save_llm_usage_report():
-    """Save LLM usage report."""
+    """Save LLM usage report to JSON."""
     if latencies:
         usage_log["avg_latency_ms"] = int(sum(latencies) / len(latencies))
     usage_log["estimated_cost_usd"] = 0.0
@@ -303,4 +335,3 @@ def save_llm_usage_report():
         json.dump(usage_log, f, indent=2)
     print(f"   ✅ llm_usage_report.json saved")
     return usage_log
-

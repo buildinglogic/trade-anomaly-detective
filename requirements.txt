@@ -6,3 +6,4 @@ python-dotenv==1.0.1
 google-genai==0.2.2
 requests==2.32.3
 faker==33.1.0
+groq==0.4.1
