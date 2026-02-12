@@ -17,9 +17,26 @@ DATA_DIR   = os.path.join(os.path.dirname(__file__), '..', 'data')
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'output')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+# Get API key from Streamlit secrets (when deployed) or .env (when local)
+GEMINI_API_KEY = ""
+try:
+    import streamlit as st
+    if hasattr(st, 'secrets') and "GEMINI_API_KEY" in st.secrets:
+        GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+        print("✅ Using API key from Streamlit Secrets")
+except:
+    pass
+
+# Fallback to .env for local development
+if not GEMINI_API_KEY:
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+    if GEMINI_API_KEY:
+        print("✅ Using API key from .env file")
+
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
+else:
+    print("⚠️ No GEMINI_API_KEY found in Streamlit Secrets or .env")
 
 MODEL_NAME = "gemini-1.5-flash"
 
