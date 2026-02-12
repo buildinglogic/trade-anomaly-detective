@@ -15,6 +15,28 @@ import datetime
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import streamlit as st
+import os
+
+# ✅ DEBUG: Check if secrets are accessible
+st.write("### 🔍 DEBUG INFO")
+try:
+    if "GROQ_API_KEY" in st.secrets:
+        key = st.secrets["GROQ_API_KEY"]
+        st.write(f"✅ Secret found in Streamlit")
+        st.write(f"Key length: {len(key)}")
+        st.write(f"Key starts with: {key[:15]}...")
+    else:
+        st.write("❌ GROQ_API_KEY not in st.secrets")
+        st.write(f"Available secrets: {list(st.secrets.keys())}")
+except Exception as e:
+    st.write(f"❌ Error accessing secrets: {e}")
+
+# Also check environment
+env_key = os.getenv("GROQ_API_KEY", "")
+st.write(f"Environment variable: {'✅ Found' if env_key else '❌ Not found'}")
+st.write("---")
+
 
 # Load .env from project root (parent of src/)
 env_path = Path(__file__).parent.parent / ".env"
