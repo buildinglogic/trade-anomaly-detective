@@ -1,6 +1,6 @@
 """
 llm_detector.py
-Layer 3: LLM detection using Google Gemini 1.5 Flash (google-genai v0.2.2).
+Layer 3: LLM detection using Google Gemini 1.5 Flash.
 """
 
 import os
@@ -8,7 +8,7 @@ import json
 import time
 import datetime
 import pandas as pd
-from pathlib import Path
+import google.generativeai as genai
 
 DATA_DIR   = os.path.join(os.path.dirname(__file__), '..', 'data')
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'output')
@@ -29,66 +29,52 @@ usage_log = {
 }
 latencies = []
 
-_client = None
 _api_key_loaded = False
+_genai_configured = False
 
 
 def _get_api_key():
-    """Lazy load API key from Streamlit secrets or .env"""
-    global _api_key_loaded
+    """Lazy load API key"""
+    global _api_key_loaded, _genai_configured
     
     if _api_key_loaded:
-        return os.environ.get("GEMINI_API_KEY", "")
+        return True
     
     api_key = ""
     
-    # Try Streamlit secrets first
+    # Try Streamlit secrets
     try:
         import streamlit as st
         if hasattr(st, 'secrets') and "GEMINI_API_KEY" in st.secrets:
             api_key = st.secrets["GEMINI_API_KEY"]
-            os.environ["GEMINI_API_KEY"] = api_key
-            print(f"✅ Loaded API key from Streamlit secrets (length: {len(api_key)})")
-            _api_key_loaded = True
-            return api_key
-    except Exception as e:
-        print(f"⚠️ Could not load from Streamlit secrets: {e}")
+            print(f"✅ API key from Streamlit secrets")
+    except:
+        pass
     
-    # Try .env file
-    try:
-        from dotenv import load_dotenv
-        load_dotenv(override=True)
-        api_key = os.getenv("GEMINI_API_KEY", "")
-        if api_key:
-            print(f"✅ Loaded API key from .env (length: {len(api_key)})")
-            _api_key_loaded = True
-            return api_key
-    except Exception as e:
-        print(f"⚠️ Could not load from .env: {e}")
-    
-    print("❌ No API key found")
-    return ""
-
-
-def _get_client():
-    """Lazy initialize Gemini client"""
-    global _client
-    
-    if _client is not None:
-        return _client
-    
-    api_key = _get_api_key()
+    # Try .env
     if not api_key:
-        return None
+        try:
+            from dotenv import load_dotenv
+            load_dotenv(override=True)
+            api_key = os.getenv("GEMINI_API_KEY", "")
+            if api_key:
+                print(f"✅ API key from .env")
+        except:
+            pass
     
-    try:
-        from google import genai
-        _client = genai.Client(api_key=api_key)
-        print(f"✅ Gemini client initialized")
-        return _client
-    except Exception as e:
-        print(f"❌ Error initializing Gemini: {e}")
-        return None
+    if api_key:
+        try:
+            genai.configure(api_key=api_key)
+            _api_key_loaded = True
+            _genai_configured = True
+            print(f"✅ Gemini configured")
+            return True
+        except Exception as e:
+            print(f"❌ Error configuring: {e}")
+            return False
+    
+    print("❌ No API key")
+    return False
 
 
 def _ensure_task_exists(task_name: str):
@@ -104,17 +90,15 @@ def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
     """Call Gemini API"""
     _ensure_task_exists(task_name)
     
-    client = _get_client()
-    if not client:
+    if not _get_api_key():
         return "[LLM UNAVAILABLE - Set GEMINI_API_KEY in Streamlit Secrets]"
+
+    model = genai.GenerativeModel(MODEL_NAME)
 
     for attempt in range(max_retries):
         try:
             start = time.time()
-            response = client.models.generate_content(
-                model=MODEL_NAME,
-                contents=prompt
-            )
+            response = model.generate_content(prompt)
             latency_ms = int((time.time() - start) * 1000)
             latencies.append(latency_ms)
 
@@ -133,7 +117,7 @@ def call_gemini(prompt: str, task_name: str, max_retries: int = 3) -> str:
             return text
 
         except Exception as e:
-            print(f"⚠️ Attempt {attempt+1} failed: {str(e)[:80]}")
+            print(f"⚠️ Attempt {attempt+1}: {str(e)[:80]}")
             if attempt < max_retries - 1:
                 time.sleep(2 ** attempt)
             else:
@@ -160,24 +144,29 @@ def validate_hs_codes(shipments_df: pd.DataFrame) -> list:
     prompt = f"""Indian customs expert: Review HS codes.
 
 Rules:
-- Ch 61: Knitted clothing (61091000 = T-shirts)
-- Ch 62: Woven clothing (62114900 = sarees)
-- Ch 84: Machinery (84713000 = laptops)
-- Ch 87: Auto parts (87083010 = brake pads)
-- Ch 42: Leather (42021200 = wallets, 42031000 = apparel accessories)
-- Ch 09: Spices (09041100 = black pepper, 09042110 = chili/capsicum)
+- Ch 61: Knitted (61091000 = T-shirts)
+- Ch 62: Woven (62114900 = sarees)
+- Ch 84: Machinery (84713000 = laptops, 84137000 = pumps)
+- Ch 87: Auto (87083010 = brake pads)
+- Ch 42: Leather (42021200 = wallets)
+- Ch 09: Spices (09041100 = black pepper)
 - Ch 10: Cereals (10063020 = rice)
+- Ch 30: Pharma (30049099)
+- Ch 39: Plastics (39021000)
+- Ch 73: Steel (73239300)
+- Ch 83: Metal (83062910)
+- Ch 94: Furniture (94054090)
 
 Check:
 {combos_text}
 
-Return ONLY valid JSON array:
+Return ONLY JSON array:
 [{{"shipment_id":"...","hs_code":"...","product":"...","is_correct":true/false,"reason":"...","correct_hs_chapter":"..."}}]
 
-No markdown, no backticks."""
+No markdown."""
 
     response = call_gemini(prompt, "hs_code_validation")
-    usage_log["breakdown_by_task"]["hs_code_validation"]["description"] = "HS code validation"
+    usage_log["breakdown_by_task"]["hs_code_validation"]["description"] = "HS validation"
 
     if response.startswith("[LLM"):
         print(f"   ⚠️ Skipped: {response}")
@@ -215,14 +204,14 @@ No markdown, no backticks."""
                             "llm_reason": item['reason']
                         },
                         "severity": "critical",
-                        "recommendation": f"Re-classify: {item.get('correct_hs_chapter', 'see above')}. Penalty: ₹50K-2L.",
+                        "recommendation": f"Re-classify: {item.get('correct_hs_chapter')}. Penalty: ₹50K-2L.",
                         "estimated_penalty_usd": 6000,
-                        "detection_method": "LLM: Gemini 1.5 Flash HS check"
+                        "detection_method": "LLM: Gemini 1.5 Flash"
                     })
     except Exception as e:
         print(f"   ⚠️ Parse error: {e}")
 
-    print(f"   LLM: {len(anomalies)} HS mismatches found")
+    print(f"   LLM: {len(anomalies)} mismatches")
     return anomalies
 
 
@@ -251,24 +240,24 @@ def generate_executive_summary(anomaly_report: dict) -> str:
         for a in top_anomalies
     ])
 
-    prompt = f"""Trade compliance consultant: Write executive summary for Operations Head.
+    prompt = f"""Write executive summary for Operations Head.
 
 Data:
 - Shipments: {anomaly_report.get('total_shipments', 0)}
 - Anomalies: {total}
-- Penalty risk: ${total_penalty:,.0f}
-- By severity: {json.dumps(by_severity)}
-- By category: {json.dumps(by_category)}
+- Penalty: ${total_penalty:,.0f}
+- Severity: {json.dumps(by_severity)}
+- Category: {json.dumps(by_category)}
 
-Top 5 issues:
+Top 5:
 {top_desc}
 
 Write 300-400 words:
-1. Executive Overview (2-3 sentences)
-2. Top 3 Urgent Issues (shipment IDs, INR impact where 1 USD = ₹83)
+1. Overview (2-3 sentences)
+2. Top 3 Urgent (IDs, INR where 1 USD = ₹83)
 3. Trends
-4. Financial Exposure
-5. Immediate Actions (3-4 bullets)
+4. Exposure
+5. Actions (3-4 bullets)
 
 Professional, non-technical."""
 
@@ -285,7 +274,7 @@ def save_llm_usage_report():
     if latencies:
         usage_log["avg_latency_ms"] = int(sum(latencies) / len(latencies))
     usage_log["estimated_cost_usd"] = 0.0
-    usage_log["notes"] += f" | {usage_log['total_calls']} total calls made."
+    usage_log["notes"] += f" | {usage_log['total_calls']} total calls."
 
     path = os.path.join(OUTPUT_DIR, 'llm_usage_report.json')
     with open(path, 'w') as f:
