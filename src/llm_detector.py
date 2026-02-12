@@ -303,3 +303,4 @@ def save_llm_usage_report():
         json.dump(usage_log, f, indent=2)
     print(f"   ✅ llm_usage_report.json saved")
     return usage_log
+
