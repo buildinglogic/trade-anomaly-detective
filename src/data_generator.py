@@ -106,7 +106,7 @@ def generate_product_catalog():
         {
             "product_id": "PROD-007",
             "product_description": "Leather Wallet Genuine Cow Hide",
-            "hs_code": "42031000",
+            "hs_code": "42021200",
             "hs_chapter": "42",
             "category": "Leather",
             "avg_unit_price_usd": 8.50,
