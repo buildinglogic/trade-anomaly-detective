@@ -1,7 +1,7 @@
 """
 llm_detector.py
 Layer 3: LLM-powered detection using Groq Llama 3.3 70B.
-FIXED: Now properly loads .env file before checking for API key.
+Works both locally (.env) and on Streamlit Cloud (secrets).
 """
 
 import os
@@ -10,57 +10,57 @@ import time
 import datetime
 import pandas as pd
 from pathlib import Path
-import streamlit as st
-from pathlib import Path
-from dotenv import load_dotenv
-
-# ✅ Try Streamlit secrets FIRST (for cloud deployment)
-try:
-    GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
-    print("✅ Loaded API key from Streamlit secrets")
-except:
-    # ✅ Fallback to .env (for local development)
-    PROJECT_ROOT = Path(__file__).parent.parent
-    env_path = PROJECT_ROOT / ".env"
-    load_dotenv(env_path, override=True)
-    GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-    
-    if GROQ_API_KEY:
-        print("✅ Loaded API key from .env")
-    else:
-        print("❌ NO API KEY FOUND")
-
-# ✅ CRITICAL FIX: Load .env file FIRST before checking environment
-from dotenv import load_dotenv
-
-# Get project root (parent directory of src/)
-PROJECT_ROOT = Path(__file__).parent.parent
-env_path = PROJECT_ROOT / ".env"
-
-# Load the .env file into environment variables
-load_dotenv(env_path, override=True)
-
-# NOW get the API key from environment
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-
-# Debug output (shows in Streamlit console)
-print("=" * 70)
-print("🔍 llm_detector.py - API Key Loading:")
-print(f"   Project root: {PROJECT_ROOT}")
-print(f"   .env path: {env_path}")
-print(f"   .env exists: {env_path.exists()}")
-print(f"   API key loaded: {bool(GROQ_API_KEY)}")
-if GROQ_API_KEY:
-    print(f"   Key length: {len(GROQ_API_KEY)}")
-    print(f"   Key preview: {GROQ_API_KEY[:20]}...")
-    print("   ✅ API KEY READY!")
-else:
-    print("   ❌ NO API KEY - Check .env file contains GROQ_API_KEY=...")
-print("=" * 70)
 
 DATA_DIR   = os.path.join(os.path.dirname(__file__), '..', 'data')
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'output')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+# ─── API Key Loading (Streamlit Cloud + Local) ──────────────────────────────
+GROQ_API_KEY = ""
+
+# Try #1: Streamlit secrets (for cloud deployment)
+try:
+    import streamlit as st
+    if hasattr(st, 'secrets') and "GROQ_API_KEY" in st.secrets:
+        GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
+        print("✅ Loaded API key from Streamlit secrets")
+except Exception as e:
+    print(f"⚠️  Streamlit secrets not available: {e}")
+
+# Try #2: .env file (for local development)
+if not GROQ_API_KEY:
+    try:
+        from dotenv import load_dotenv
+        PROJECT_ROOT = Path(__file__).parent.parent
+        env_path = PROJECT_ROOT / ".env"
+        load_dotenv(env_path, override=True)
+        GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+        
+        if GROQ_API_KEY:
+            print(f"✅ Loaded API key from .env file")
+        else:
+            print(f"⚠️  .env file exists but GROQ_API_KEY not found")
+    except Exception as e:
+        print(f"⚠️  Could not load from .env: {e}")
+
+# Try #3: Direct environment variable
+if not GROQ_API_KEY:
+    GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+    if GROQ_API_KEY:
+        print(f"✅ Loaded API key from environment")
+
+# Final status
+print("=" * 70)
+print("🔍 llm_detector.py - API Key Status:")
+if GROQ_API_KEY:
+    print(f"   ✅ API key loaded successfully")
+    print(f"   Key length: {len(GROQ_API_KEY)}")
+    print(f"   Key preview: {GROQ_API_KEY[:20]}...")
+else:
+    print(f"   ❌ NO API KEY FOUND")
+    print(f"   → For Streamlit Cloud: Add GROQ_API_KEY to Secrets")
+    print(f"   → For local: Create .env with GROQ_API_KEY=gsk_...")
+print("=" * 70)
 
 # ─── Client Initialization ──────────────────────────────────────────────────
 client = None
@@ -71,7 +71,7 @@ if GROQ_API_KEY:
         print("✅ Groq client configured successfully")
     except ImportError:
         print("❌ groq package not installed")
-        print("   → Run: pip install groq")
+        print("   → Add to requirements.txt: groq==0.4.1")
     except Exception as e:
         print(f"❌ Error configuring Groq: {e}")
 else:
@@ -92,7 +92,6 @@ usage_log = {
 }
 latencies = []
 
-# ... rest of your file stays exactly the same ...
 
 def _ensure_task_exists(task_name: str):
     """Ensure task key exists in breakdown_by_task."""
@@ -109,7 +108,7 @@ def call_groq(prompt: str, task_name: str, max_retries: int = 3) -> str:
     _ensure_task_exists(task_name)
     
     if not client:
-        return "[LLM UNAVAILABLE - Set GROQ_API_KEY in .env]"
+        return "[LLM UNAVAILABLE - Set GROQ_API_KEY in Streamlit Secrets or .env]"
 
     for attempt in range(max_retries):
         try:
@@ -151,7 +150,7 @@ def call_groq(prompt: str, task_name: str, max_retries: int = 3) -> str:
             
             # Don't retry on API key errors
             if "API key" in error_msg or "authentication" in error_msg.lower():
-                return f"[LLM ERROR: Invalid API key. Check GROQ_API_KEY in .env]"
+                return f"[LLM ERROR: Invalid API key]"
             
             if attempt < max_retries - 1:
                 wait_time = 2 ** attempt
@@ -272,7 +271,7 @@ IMPORTANT: Return ONLY valid JSON. No markdown, no backticks, no explanation."""
                             "File amendment with customs. Penalty: ₹50K-₹2L."
                         ),
                         "estimated_penalty_usd": 6000,
-                        "detection_method": "LLM: Groq Mixtral HS classification check"
+                        "detection_method": "LLM: Groq Llama 3.3 70B HS classification check"
                     })
 
     except (json.JSONDecodeError, KeyError, Exception) as e:
