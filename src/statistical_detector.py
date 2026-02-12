@@ -1,7 +1,7 @@
 """
 statistical_detector.py
-Layer 2: Statistical anomaly detection using Z-scores.
-Choice rationale in DESIGN_DECISIONS.md.
+Layer 2: Statistical anomaly detection using Z-scores + context-aware filtering.
+Improved to reduce false positives while maintaining high recall.
 """
 
 import pandas as pd
@@ -17,6 +17,151 @@ def zscore(series: pd.Series) -> pd.Series:
     if std == 0 or pd.isna(std):
         return pd.Series(np.zeros(len(series)), index=series.index)
     return (series - series.mean()) / std
+
+
+def detect_payment_trend(df: pd.DataFrame, buyers_df: pd.DataFrame, window: int = 3) -> list:
+    """
+    IMPROVEMENT #2: Detect if a buyer's payment behavior is DETERIORATING over time.
+    Only flag if last N shipments show consistent slowdown.
+    This catches real patterns, not single anomalies.
+    """
+    anomalies = []
+    counter = [0]
+    
+    buyers_lookup = {b['buyer_name']: b for b in buyers_df.to_dict('records')}
+    
+    paid_df = df[df['days_to_payment'].notna()].copy()
+    paid_df['date'] = pd.to_datetime(paid_df['date'])
+    paid_df = paid_df.sort_values('date')
+    
+    for buyer, group in paid_df.groupby('buyer_name'):
+        if len(group) < window:
+            continue
+            
+        buyer_info = buyers_lookup.get(buyer, {})
+        historical_avg = float(buyer_info.get('avg_payment_days', group['days_to_payment'].mean()))
+        
+        # Get last N shipments
+        recent = group.tail(window)
+        recent_avg = recent['days_to_payment'].mean()
+        
+        # Calculate trend: is it getting worse?
+        older = group.iloc[:-window]
+        older_avg = older['days_to_payment'].mean() if len(older) > 0 else historical_avg
+        
+        slowdown = recent_avg - older_avg
+        slowdown_pct = (slowdown / historical_avg) * 100 if historical_avg > 0 else 0
+        
+        # FLAG ONLY IF:
+        # 1. Recent average is consistently 2+ weeks above historical
+        # 2. Trend is getting worse (recent > older)
+        # 3. Slowdown is significant (>40%)
+        if slowdown >= 14 and slowdown_pct > 40 and recent_avg > historical_avg * 1.5:
+            counter[0] += 1
+            anomalies.append({
+                "anomaly_id": f"TREND-{counter[0]:03d}",
+                "layer": "statistical",
+                "shipment_id": f"MULTI-{buyer[:10]}",
+                "category": "payment",
+                "sub_type": "payment_deterioration_trend",
+                "description": (
+                    f"{buyer}: Payment behavior DETERIORATING. "
+                    f"Last {window} shipments avg {recent_avg:.0f} days vs "
+                    f"historical {historical_avg:.0f} days (+{slowdown_pct:.0f}% slower)."
+                ),
+                "evidence": {
+                    "buyer": buyer,
+                    "historical_avg_days": historical_avg,
+                    "recent_avg_days": round(recent_avg, 1),
+                    "trend_slowdown_days": round(slowdown, 1),
+                    "trend_slowdown_pct": round(slowdown_pct, 1),
+                    "window_shipments": window,
+                    "credit_rating": buyer_info.get('credit_rating', 'N/A')
+                },
+                "severity": "critical" if buyer_info.get('credit_rating') == 'C' else "high",
+                "recommendation": (
+                    f"URGENT: {buyer} showing deteriorating payment pattern. "
+                    f"Recommend: (1) Reduce credit terms to LC instead of Open Account, "
+                    f"(2) Reduce shipment sizes, (3) Request payment guarantee."
+                ),
+                "estimated_penalty_usd": 5000,
+                "detection_method": "Trend analysis: recent payment pattern vs historical"
+            })
+    
+    return anomalies
+
+
+def detect_volume_anomalies_smart(df: pd.DataFrame, products_df: pd.DataFrame) -> list:
+    """
+    IMPROVEMENT #3: Volume spike detection that considers:
+    1. Single shipment unusually large (outlier within buyer history)
+    2. Buyer's typical order size
+    3. Product type (rice to Gulf = more suspicious than textiles)
+    """
+    anomalies = []
+    counter = [0]
+    
+    # Mark products by "suspicious export risk"
+    suspicious_products = {
+        'Basmati Rice Premium Grade': 3,        # Food to certain countries = re-export risk
+        'Pharmaceutical Tablets Generic': 4,    # Highest risk (restricted countries)
+        'Polypropylene Granules Industrial': 2  # Chemicals, moderate risk
+    }
+    
+    for _, row in df.iterrows():
+        product = row['product_description']
+        buyer_fob = row['total_fob_usd']
+        buyer_country = row['buyer_country']
+        quantity = row['quantity']
+        
+        # Get buyer's typical order value
+        buyer_orders = df[df['buyer_name'] == row['buyer_name']]['total_fob_usd']
+        buyer_avg = buyer_orders.mean()
+        buyer_max = buyer_orders.quantile(0.95)  # 95th percentile (normal max)
+        
+        # Calculate spike ratio
+        spike_ratio = buyer_fob / buyer_avg if buyer_avg > 0 else 1
+        risk_factor = suspicious_products.get(product, 1)
+        
+        # FLAG IF:
+        # 1. Order is >8x buyer's average AND >$100K
+        # 2. OR: High-risk product AND >5x average
+        if (spike_ratio > 8 and buyer_fob > 100000) or (risk_factor >= 3 and spike_ratio > 5):
+            counter[0] += 1
+            anomalies.append({
+                "anomaly_id": f"VOL-{counter[0]:03d}",
+                "layer": "statistical",
+                "shipment_id": row['shipment_id'],
+                "category": "volume",
+                "sub_type": "suspicious_large_order",
+                "description": (
+                    f"{row['buyer_name']} ({buyer_country}): "
+                    f"Order of ${buyer_fob:,.0f} ({quantity:,} units) is {spike_ratio:.1f}x their average. "
+                    f"Product: {product} (risk=HIGH)."
+                ),
+                "evidence": {
+                    "buyer": row['buyer_name'],
+                    "buyer_country": buyer_country,
+                    "order_value": float(buyer_fob),
+                    "buyer_typical_avg": round(buyer_avg, 0),
+                    "buyer_typical_max": round(buyer_max, 0),
+                    "spike_ratio": round(spike_ratio, 1),
+                    "quantity": int(quantity),
+                    "product": product,
+                    "risk_factor": risk_factor
+                },
+                "severity": "critical",
+                "recommendation": (
+                    f"URGENT: Request end-use certificate from {row['buyer_name']}. "
+                    f"Verify final destination (not re-export). "
+                    f"Consider: (1) Reducing order size, (2) Requesting advance payment, "
+                    f"(3) Checking for sanctions on buyer."
+                ),
+                "estimated_penalty_usd": 20000,
+                "detection_method": "Volume spike + product risk analysis"
+            })
+    
+    return anomalies
 
 
 def run_statistical_checks(
@@ -151,7 +296,7 @@ def run_statistical_checks(
                 estimated_penalty_usd=5000 if direction == "HIGH" else 0
             ))
 
-    # ── STAT-4: Payment behavior change per buyer ────────────────────────
+    # ── STAT-4: Payment behavior change per buyer (IMPROVED #1) ──────────
     buyers_lookup = {
         b['buyer_name']: b for b in buyers_df.to_dict('records')
     }
@@ -165,27 +310,39 @@ def run_statistical_checks(
         historical_avg = float(buyer_info.get('avg_payment_days', group['days_to_payment'].mean()))
         zscores = zscore(group['days_to_payment'])
         outliers = group[zscores.abs() > z_threshold]
+        
         for _, row in outliers.iterrows():
             z = zscores[row.name]
-            if z > 0:  # Only flag when payment is SLOWER
+            credit_rating = buyer_info.get('credit_rating', 'B')
+            
+            # IMPROVEMENT #1: Higher threshold for A-rated buyers (lower risk)
+            threshold = 4.5 if credit_rating == 'A' else 3.5 if credit_rating == 'B' else 2.5
+            
+            # Only flag if BOTH z-score is high AND payment is significantly late
+            days_above_avg = row['days_to_payment'] - historical_avg
+            
+            if z > threshold and days_above_avg > 30:  # 30-day buffer
                 anomalies.append(make_anomaly(
                     shipment_id=row['shipment_id'],
                     category="payment",
                     sub_type="payment_delay",
                     description=(
-                        f"{buyer} paid in {row['days_to_payment']:.0f} days — "
-                        f"{abs(z):.1f}σ above their avg of {historical_avg:.0f} days."
+                        f"{buyer} (Rating: {credit_rating}) paid in {row['days_to_payment']:.0f} days — "
+                        f"{days_above_avg:.0f} days above their avg of {historical_avg:.0f}. "
+                        f"Pattern suggests working capital stress."
                     ),
                     evidence={
                         "days_to_payment": float(row['days_to_payment']),
                         "buyer_historical_avg": historical_avg,
+                        "days_above_avg": days_above_avg,
                         "z_score": round(float(z), 2),
                         "buyer": buyer,
-                        "credit_rating": buyer_info.get('credit_rating', 'N/A')
+                        "credit_rating": credit_rating,
+                        "threshold_applied": threshold
                     },
-                    severity="high" if z > 3.5 else "medium",
-                    recommendation=f"Flag {buyer} for credit review. Consider LC instead of Open Account.",
-                    estimated_penalty_usd=2000
+                    severity="high" if credit_rating in ['B', 'C'] else "medium",
+                    recommendation=f"Flag {buyer} (Rating {credit_rating}) for credit review. Monitor next 2-3 shipments for trend.",
+                    estimated_penalty_usd=2000 if credit_rating == 'A' else 3000
                 ))
 
     # ── STAT-5: Volume spikes per buyer ──────────────────────────────────
@@ -256,6 +413,16 @@ def run_statistical_checks(
                 ))
 
     print(f"   Layer 2 (Statistical): {len(anomalies)} anomalies found")
+    
+    # ── ADD IMPROVEMENTS #2 and #3 ───────────────────────────────────────
+    trend_anomalies = detect_payment_trend(df, buyers_df, window=3)
+    anomalies.extend(trend_anomalies)
+    print(f"   Layer 2 (Trend Analysis): {len(trend_anomalies)} trend anomalies found")
+    
+    volume_anomalies = detect_volume_anomalies_smart(df, products_df)
+    anomalies.extend(volume_anomalies)
+    print(f"   Layer 2 (Smart Volume): {len(volume_anomalies)} volume anomalies found")
+    
     return anomalies
 
 
