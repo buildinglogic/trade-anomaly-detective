@@ -156,16 +156,16 @@ def generate_product_catalog():
             "restricted_countries": ""
         },
         {
-            "product_id": "PROD-011",
+            "product_id": "PROD-012",
             "product_description": "Embroidered Saree Silk",
-            "hs_code": "62046200",
+            "hs_code": "62114900",  
             "hs_chapter": "62",
             "category": "Textiles",
-            "avg_unit_price_usd": 35.00,
-            "price_range_min": 22.00,
-            "price_range_max": 55.00,
+            "avg_unit_price_usd": 45.00,
+            "price_range_min": 35.00,
+            "price_range_max": 60.00,
             "drawback_rate_pct": 2.0,
-            "weight_per_unit_kg": 0.50,
+            "weight_per_unit_kg": 0.4,
             "restricted_countries": ""
         },
         {

@@ -1,0 +1,13 @@
+product_id,product_description,hs_code,hs_chapter,category,avg_unit_price_usd,price_range_min,price_range_max,drawback_rate_pct,weight_per_unit_kg,restricted_countries
+PROD-001,Cotton T-shirts 100% knitted,61091000,61,Textiles,4.5,3.0,6.5,2.0,0.25,
+PROD-002,Basmati Rice Premium Grade,10063020,10,Food Products,1.2,0.9,1.8,1.0,1.0,
+PROD-003,Automobile Brake Pads,87083010,87,Auto Parts,18.0,12.0,28.0,3.0,0.8,
+PROD-004,Pharmaceutical Tablets Generic,30049099,30,Chemicals,0.08,0.05,0.15,2.5,0.001,"North Korea,Iran"
+PROD-005,Handcrafted Brass Figurines,83062910,83,Handicrafts,12.0,8.0,18.0,1.5,0.6,
+PROD-006,Industrial Centrifugal Pump,84137000,84,Machinery,450.0,320.0,650.0,3.5,45.0,
+PROD-007,Leather Wallet Genuine Cow Hide,42031000,42,Leather,8.5,6.0,12.0,1.8,0.15,
+PROD-008,Black Pepper Ground Organic,09042110,09,Food Products,6.0,4.5,8.5,1.0,1.0,
+PROD-009,Stainless Steel Kitchen Utensils,73239300,73,Metal Products,3.2,2.2,4.8,2.0,0.35,
+PROD-010,Polypropylene Granules Industrial,39021000,39,Chemicals,1.1,0.85,1.5,1.5,1.0,
+PROD-012,Embroidered Saree Silk,62114900,62,Textiles,45.0,35.0,60.0,2.0,0.4,
+PROD-012,LED Street Light Fixtures,94054090,94,Machinery,85.0,60.0,120.0,3.0,4.5,
