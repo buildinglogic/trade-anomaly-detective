@@ -3,6 +3,19 @@ app.py
 Streamlit dashboard for Trade Shipment Anomaly Detective.
 Run: streamlit run src/app.py
 """
+import streamlit as st
+
+st.write("### 🔍 Secrets Debug")
+try:
+    key = st.secrets.get("GROQ_API_KEY", "NOT FOUND")
+    if key != "NOT FOUND":
+        st.success(f"✅ Key found! Length: {len(key)}, Starts: {key[:20]}...")
+    else:
+        st.error("❌ Key not found in secrets")
+        st.write(f"Available keys: {list(st.secrets.keys())}")
+except Exception as e:
+    st.error(f"❌ Error: {e}")
+st.write("---") 
 
 import streamlit as st
 import pandas as pd
