@@ -1,0 +1,56 @@
+{
+  "planted_anomalies": 12,
+  "detected_correctly": 11,
+  "missed": 1,
+  "false_positives": 51,
+  "precision": 0.177,
+  "recall": 0.917,
+  "f1_score": 0.297,
+  "missed_anomalies": [
+    "PLANTED-010"
+  ],
+  "missed_details": [
+    {
+      "anomaly_id": "PLANTED-010",
+      "shipment_id": "SHP-2025-0230",
+      "category": "volume",
+      "sub_type": "country_volume_spike",
+      "description": "UAE (Gulf Distributors LLC) October 2025 shows single shipment of 95,000 units Basmati Rice ($114,000) \u2014 far above monthly UAE average.",
+      "why_this_matters": "Could indicate stockpiling before embargo, re-export to sanctioned countries (Iran, nearby), or fraudulent invoicing.",
+      "estimated_penalty_usd": 10000,
+      "severity": "critical"
+    }
+  ],
+  "false_positive_details": [
+    {
+      "anomaly_id": "LLM-001",
+      "shipment_id": "SHP-2025-0159",
+      "why_flagged": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "shipment_id": "SHP-2025-0043",
+      "why_flagged": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "shipment_id": "SHP-2025-0081",
+      "why_flagged": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "shipment_id": "SHP-2025-0052",
+      "why_flagged": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "shipment_id": "SHP-2025-0189",
+      "why_flagged": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
+    }
+  ]
+}

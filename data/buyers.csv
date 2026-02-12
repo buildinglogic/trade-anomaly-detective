@@ -1,0 +1,9 @@
+buyer_name,buyer_country,relationship_since,avg_order_value_usd,avg_payment_days,credit_rating,total_shipments_historical
+Global Mart Inc,USA,2019-04-10,35000.0,38,A,210
+Euro Trade GmbH,Germany,2020-07-22,48000.0,32,A,185
+Gulf Distributors LLC,UAE,2018-11-05,22000.0,28,A,298
+Pacific Traders Pty,Australia,2021-03-14,19000.0,42,B,96
+SG Merchants Pte,Singapore,2020-01-18,28000.0,25,A,143
+London Imports Ltd,UK,2022-06-30,31000.0,45,B,78
+Nippon Commerce KK,Japan,2021-09-11,55000.0,35,A,112
+African Goods Co,South Africa,2023-02-20,14000.0,52,C,34

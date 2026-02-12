@@ -1,0 +1,122 @@
+[
+  {
+    "anomaly_id": "PLANTED-001",
+    "shipment_id": "SHP-2025-0034",
+    "category": "pricing",
+    "sub_type": "fob_math_error",
+    "description": "total_fob_usd ($10,800) \u2260 quantity (2000) \u00d7 unit_price ($4.50 = $9,000). Inflated by $1,800.",
+    "why_this_matters": "Inflated FOB increases drawback claim. At 2% drawback, exporter claims $216 extra per shipment. Customs penalty: \u20b91-5 lakh per incident.",
+    "estimated_penalty_usd": 5000,
+    "severity": "critical"
+  },
+  {
+    "anomaly_id": "PLANTED-002",
+    "shipment_id": "SHP-2025-0067",
+    "category": "pricing",
+    "sub_type": "price_below_range",
+    "description": "Cotton T-shirts unit price $0.80 is 73% below the product minimum of $3.00. Gulf Distributors LLC receiving suspicious discounting.",
+    "why_this_matters": "Under-invoicing to reduce customs duty for buyer. Exporter may be violating FEMA/transfer pricing rules. Penalty: \u20b92-10 lakh.",
+    "estimated_penalty_usd": 8000,
+    "severity": "critical"
+  },
+  {
+    "anomaly_id": "PLANTED-003",
+    "shipment_id": "SHP-2025-0089",
+    "category": "compliance",
+    "sub_type": "hs_code_mismatch",
+    "description": "Cotton T-shirts (textile, Chapter 61) exported under HS code 84713000 (Laptops/Computers, Chapter 84).",
+    "why_this_matters": "Wrong duty rate applied. Electronics attract 0% BCD while textiles attract 10-20%. Misclassification penalty: \u20b950K-\u20b92L + goods seized.",
+    "estimated_penalty_usd": 6000,
+    "severity": "critical"
+  },
+  {
+    "anomaly_id": "PLANTED-004",
+    "shipment_id": "SHP-2025-0115",
+    "category": "compliance",
+    "sub_type": "drawback_on_rejected",
+    "description": "Drawback of $850 claimed on a shipment with customs_status = 'rejected'. Drawback is not eligible for rejected shipments.",
+    "why_this_matters": "Fraudulent drawback claim. Recovery + 15% interest + penalty up to 200% of drawback amount. Risk: \u20b91.5-3 lakh.",
+    "estimated_penalty_usd": 4000,
+    "severity": "high"
+  },
+  {
+    "anomaly_id": "PLANTED-005",
+    "shipment_id": "SHP-2025-0127",
+    "category": "route_logistics",
+    "sub_type": "transit_days_spike",
+    "description": "INMUN1\u2192AEJEA (UAE) route normal range: 6-11 days. This shipment took 45 days \u2014 4x the maximum.",
+    "why_this_matters": "Unexplained transit delay suggests cargo held at port, re-routing through sanctioned port, or documentation issues. Risk of \u20b980K demurrage.",
+    "estimated_penalty_usd": 3000,
+    "severity": "high"
+  },
+  {
+    "anomaly_id": "PLANTED-006",
+    "shipment_id": "SHP-2025-0156",
+    "category": "route_logistics",
+    "sub_type": "freight_cost_spike",
+    "description": "INMUN1\u2192DEHAM 40ft container avg freight $1,800. This shipment shows $7,200 \u2014 exactly 4x the average.",
+    "why_this_matters": "Inflated freight = inflated CIF value = lower import duty for buyer OR kickback to freight forwarder. Margin loss: $5,400 per shipment.",
+    "estimated_penalty_usd": 5400,
+    "severity": "high"
+  },
+  {
+    "anomaly_id": "PLANTED-007",
+    "shipment_id": "SHP-2025-0187",
+    "category": "payment",
+    "sub_type": "payment_behavior_change",
+    "description": "Euro Trade GmbH avg_payment_days = 32. This shipment: days_to_payment = 110 days (3.4x their historical average).",
+    "why_this_matters": "Buyer experiencing financial stress or deliberately delaying. Cash flow risk: working capital blocked for extra 78 days. Risk: bad debt.",
+    "estimated_penalty_usd": 2000,
+    "severity": "high"
+  },
+  {
+    "anomaly_id": "PLANTED-008",
+    "shipment_id": "SHP-2025-0199",
+    "category": "payment",
+    "sub_type": "received_null_days",
+    "description": "payment_status = 'received' but days_to_payment is NULL. Contradictory data \u2014 payment cannot be received without a date.",
+    "why_this_matters": "Data integrity issue. Could be masking an actual unpaid receivable in the books. Accounting audit risk.",
+    "estimated_penalty_usd": 1000,
+    "severity": "medium"
+  },
+  {
+    "anomaly_id": "PLANTED-009",
+    "shipment_id": "SHP-2025-0212",
+    "category": "volume",
+    "sub_type": "buyer_volume_spike",
+    "description": "African Goods Co (avg order $14,000) suddenly places order of 80,000 units of Cotton T-shirts = $360,000. ~26x their average order value.",
+    "why_this_matters": "Possible fictitious transaction, money laundering, or end-user diversion. Triggers FEMA/ECGC scrutiny. Risk: \u20b95-20 lakh.",
+    "estimated_penalty_usd": 15000,
+    "severity": "critical"
+  },
+  {
+    "anomaly_id": "PLANTED-010",
+    "shipment_id": "SHP-2025-0230",
+    "category": "volume",
+    "sub_type": "country_volume_spike",
+    "description": "UAE (Gulf Distributors LLC) October 2025 shows single shipment of 95,000 units Basmati Rice ($114,000) \u2014 far above monthly UAE average.",
+    "why_this_matters": "Could indicate stockpiling before embargo, re-export to sanctioned countries (Iran, nearby), or fraudulent invoicing.",
+    "estimated_penalty_usd": 10000,
+    "severity": "critical"
+  },
+  {
+    "anomaly_id": "PLANTED-011",
+    "shipment_id": "SHP-2025-0241",
+    "category": "cross_field",
+    "sub_type": "insurance_rate_error",
+    "description": "Insurance = $90 on FOB $4,500 = 2.0% rate. Normal is ~0.2%. Insurance overcharged by 10x.",
+    "why_this_matters": "Inflated insurance increases CIF value, affecting buyer's import duty base. Also overpayment to insurer = \u20b95K-\u20b940K unnecessary cost.",
+    "estimated_penalty_usd": 500,
+    "severity": "medium"
+  },
+  {
+    "anomaly_id": "PLANTED-012",
+    "shipment_id": "SHP-2025-0248",
+    "category": "cross_field",
+    "sub_type": "cif_zero_freight",
+    "description": "incoterm = CIF but freight_cost_usd = 0. Under CIF, the seller is contractually obligated to pay freight.",
+    "why_this_matters": "Either the shipment cost is being hidden/split, or the contract terms are violated. Buyer may dispute delivery responsibility. Legal risk.",
+    "estimated_penalty_usd": 2500,
+    "severity": "high"
+  }
+]

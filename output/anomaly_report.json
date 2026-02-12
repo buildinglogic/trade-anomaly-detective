@@ -1,0 +1,1333 @@
+{
+  "report_generated_at": "2026-02-12T19:34:19.679396Z",
+  "total_shipments": 250,
+  "total_anomalies": 66,
+  "anomalies_by_category": {
+    "compliance": 47,
+    "pricing": 2,
+    "route_logistics": 2,
+    "cross_field": 5,
+    "payment": 10
+  },
+  "anomalies_by_severity": {
+    "critical": 48,
+    "high": 6,
+    "medium": 12
+  },
+  "total_estimated_penalty_usd": 322550,
+  "total_estimated_penalty_inr": 26771650,
+  "anomalies": [
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0159",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0043",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0081",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0052",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0189",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0221",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0087",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0032",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0190",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0059",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0155",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0167",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0108",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0086",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0101",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0183",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0169",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0049",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0036",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0071",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-001",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0085",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 09041100 does not match 'Black Pepper Ground Organic'. The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200.",
+      "evidence": {
+        "hs_code_used": "09041100",
+        "product": "Black Pepper Ground Organic",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "09 - Coffee, Tea, Mat\u00e9 And Spices",
+        "llm_reason": "The product is 'ground' pepper, but HS code 09041100 is for pepper that is 'neither crushed nor ground' (whole). The correct code for ground pepper is 09041200."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 09 - Coffee, Tea, Mat\u00e9 And Spices. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0041",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0181",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0144",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0137",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0250",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0210",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0215",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0180",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0182",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0163",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0127",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0136",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0158",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0164",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0192",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0114",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0176",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0025",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0195",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0044",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0240",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0225",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0007",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-002",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0063",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 42021200 does not match 'Leather Wallet Genuine Cow Hide'. The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100.",
+      "evidence": {
+        "hs_code_used": "42021200",
+        "product": "Leather Wallet Genuine Cow Hide",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut)",
+        "llm_reason": "The product is a leather wallet. HS code 42021200 is for articles with an outer surface of plastic sheeting or textile materials, not leather. The correct code for a leather wallet would be 42023100."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 42 - Articles Of Leather; Saddlery And Harness; Travel Goods, Handbags And Similar Containers; Articles Of Animal Gut (Other Than Silkworm Gut). File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "LLM-003",
+      "layer": "llm",
+      "shipment_id": "SHP-2025-0089",
+      "category": "compliance",
+      "sub_type": "hs_code_mismatch",
+      "description": "HS code 84713000 does not match 'Cotton T-shirts 100% knitted'. The product is knitted clothing (T-shirts), which falls under Chapter 61, not Chapter 84 (Machinery, computers). The correct HS code for knitted cotton T-shirts is 61091000.",
+      "evidence": {
+        "hs_code_used": "84713000",
+        "product": "Cotton T-shirts 100% knitted",
+        "llm_verdict": "INCORRECT",
+        "correct_chapter": "61 - Articles Of Apparel And Clothing Accessories, Knitted Or Crocheted",
+        "llm_reason": "The product is knitted clothing (T-shirts), which falls under Chapter 61, not Chapter 84 (Machinery, computers). The correct HS code for knitted cotton T-shirts is 61091000."
+      },
+      "severity": "critical",
+      "recommendation": "Re-classify under correct HS chapter: 61 - Articles Of Apparel And Clothing Accessories, Knitted Or Crocheted. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
+      "estimated_penalty_usd": 6000,
+      "detection_method": "LLM: Gemini 1.5 Flash HS classification check",
+      "risk_score": 106.0
+    },
+    {
+      "anomaly_id": "RULE-001",
+      "layer": "rule_based",
+      "shipment_id": "SHP-2025-0034",
+      "category": "pricing",
+      "sub_type": "fob_math_error",
+      "description": "FOB mismatch: reported $10,800.00 != calculated $9,000.00",
+      "evidence": {
+        "reported_fob": 10800.0,
+        "quantity": 2000,
+        "unit_price": 4.5,
+        "calculated_fob": 9000.0,
+        "difference": 1800.0
+      },
+      "severity": "critical",
+      "recommendation": "Verify invoice with buyer. Correct FOB before drawback claim submission.",
+      "estimated_penalty_usd": 5000,
+      "detection_method": "Rule-based arithmetic/logic check",
+      "risk_score": 105.0
+    },
+    {
+      "anomaly_id": "RULE-002",
+      "layer": "rule_based",
+      "shipment_id": "SHP-2025-0115",
+      "category": "compliance",
+      "sub_type": "drawback_on_rejected",
+      "description": "Drawback of $850.00 claimed but customs_status is REJECTED.",
+      "evidence": {
+        "customs_status": "rejected",
+        "drawback_amount": 850.0,
+        "drawback_rate_pct": 2.5
+      },
+      "severity": "critical",
+      "recommendation": "Reverse drawback claim immediately. File amendment with DGFT.",
+      "estimated_penalty_usd": 2550,
+      "detection_method": "Rule-based arithmetic/logic check",
+      "risk_score": 102.55
+    },
+    {
+      "anomaly_id": "STAT-001",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0067",
+      "category": "pricing",
+      "sub_type": "price_outlier",
+      "description": "Cotton T-shirts 100% knitted: unit_price $0.80 is 3.1\u03c3 LOW from mean $4.44.",
+      "evidence": {
+        "unit_price": 0.8,
+        "product_mean": 4.44,
+        "product_std": 1.16,
+        "z_score": -3.14,
+        "catalog_range": "$3.0 - $6.5",
+        "buyer": "Gulf Distributors LLC"
+      },
+      "severity": "high",
+      "recommendation": "Review pricing with Gulf Distributors LLC. Check for under/over-invoicing.",
+      "estimated_penalty_usd": 8000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 83.0
+    },
+    {
+      "anomaly_id": "STAT-003",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0156",
+      "category": "route_logistics",
+      "sub_type": "freight_cost_outlier",
+      "description": "Freight cost $7,200 for INMUN1\u2192DEHAM (40ft) is 3.0\u03c3 HIGH from route avg $2,258.",
+      "evidence": {
+        "freight_cost": 7200.0,
+        "route_avg_freight": 2257.91,
+        "route_std": 1645.47,
+        "z_score": 3.0,
+        "route": "INMUN1 \u2192 DEHAM",
+        "container_type": "40ft"
+      },
+      "severity": "high",
+      "recommendation": "Verify with freight forwarder. Get 2 competitive quotes. Check for kickback arrangements.",
+      "estimated_penalty_usd": 5000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 80.0
+    },
+    {
+      "anomaly_id": "STAT-002",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0127",
+      "category": "route_logistics",
+      "sub_type": "transit_days_outlier",
+      "description": "Route INMUN1\u2192AEJEA: transit 45 days is 5.3\u03c3 from route mean 10 days.",
+      "evidence": {
+        "transit_days": 45,
+        "route_mean": 9.8,
+        "route_std": 6.6,
+        "z_score": 5.3,
+        "route": "INMUN1 \u2192 AEJEA"
+      },
+      "severity": "high",
+      "recommendation": "Contact freight forwarder. Verify vessel tracking. Check for detention/demurrage.",
+      "estimated_penalty_usd": 3000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 78.0
+    },
+    {
+      "anomaly_id": "RULE-004",
+      "layer": "rule_based",
+      "shipment_id": "SHP-2025-0248",
+      "category": "cross_field",
+      "sub_type": "cif_zero_freight",
+      "description": "Incoterm is CIF (seller pays freight) but freight_cost_usd = 0.",
+      "evidence": {
+        "incoterm": "CIF",
+        "freight_cost_usd": 0.0,
+        "total_fob": 5727.6
+      },
+      "severity": "high",
+      "recommendation": "Check if freight was invoiced separately. Update freight_cost_usd or change incoterm.",
+      "estimated_penalty_usd": 2500,
+      "detection_method": "Rule-based arithmetic/logic check",
+      "risk_score": 77.5
+    },
+    {
+      "anomaly_id": "STAT-009",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0239",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "London Imports Ltd paid in 113 days \u2014 4.0\u03c3 above their avg of 45 days.",
+      "evidence": {
+        "days_to_payment": 113.0,
+        "buyer_historical_avg": 45.0,
+        "z_score": 4.04,
+        "buyer": "London Imports Ltd",
+        "credit_rating": "B"
+      },
+      "severity": "high",
+      "recommendation": "Flag London Imports Ltd for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 77.0
+    },
+    {
+      "anomaly_id": "STAT-012",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0073",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "SG Merchants Pte paid in 90 days \u2014 4.4\u03c3 above their avg of 25 days.",
+      "evidence": {
+        "days_to_payment": 90.0,
+        "buyer_historical_avg": 25.0,
+        "z_score": 4.36,
+        "buyer": "SG Merchants Pte",
+        "credit_rating": "A"
+      },
+      "severity": "high",
+      "recommendation": "Flag SG Merchants Pte for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 77.0
+    },
+    {
+      "anomaly_id": "STAT-004",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0138",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "African Goods Co paid in 144 days \u2014 3.1\u03c3 above their avg of 52 days.",
+      "evidence": {
+        "days_to_payment": 144.0,
+        "buyer_historical_avg": 52.0,
+        "z_score": 3.11,
+        "buyer": "African Goods Co",
+        "credit_rating": "C"
+      },
+      "severity": "medium",
+      "recommendation": "Flag African Goods Co for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "STAT-005",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0158",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "African Goods Co paid in 133 days \u2014 2.7\u03c3 above their avg of 52 days.",
+      "evidence": {
+        "days_to_payment": 133.0,
+        "buyer_historical_avg": 52.0,
+        "z_score": 2.68,
+        "buyer": "African Goods Co",
+        "credit_rating": "C"
+      },
+      "severity": "medium",
+      "recommendation": "Flag African Goods Co for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "STAT-006",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0187",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "Euro Trade GmbH paid in 110 days \u2014 3.5\u03c3 above their avg of 32 days.",
+      "evidence": {
+        "days_to_payment": 110.0,
+        "buyer_historical_avg": 32.0,
+        "z_score": 3.49,
+        "buyer": "Euro Trade GmbH",
+        "credit_rating": "A"
+      },
+      "severity": "medium",
+      "recommendation": "Flag Euro Trade GmbH for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "STAT-007",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0233",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "Global Mart Inc paid in 108 days \u2014 2.9\u03c3 above their avg of 38 days.",
+      "evidence": {
+        "days_to_payment": 108.0,
+        "buyer_historical_avg": 38.0,
+        "z_score": 2.89,
+        "buyer": "Global Mart Inc",
+        "credit_rating": "A"
+      },
+      "severity": "medium",
+      "recommendation": "Flag Global Mart Inc for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "STAT-008",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0223",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "Global Mart Inc paid in 104 days \u2014 2.7\u03c3 above their avg of 38 days.",
+      "evidence": {
+        "days_to_payment": 104.0,
+        "buyer_historical_avg": 38.0,
+        "z_score": 2.7,
+        "buyer": "Global Mart Inc",
+        "credit_rating": "A"
+      },
+      "severity": "medium",
+      "recommendation": "Flag Global Mart Inc for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "STAT-010",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0045",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "Nippon Commerce KK paid in 81 days \u2014 2.8\u03c3 above their avg of 35 days.",
+      "evidence": {
+        "days_to_payment": 81.0,
+        "buyer_historical_avg": 35.0,
+        "z_score": 2.76,
+        "buyer": "Nippon Commerce KK",
+        "credit_rating": "A"
+      },
+      "severity": "medium",
+      "recommendation": "Flag Nippon Commerce KK for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "STAT-011",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0241",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "Pacific Traders Pty paid in 97 days \u2014 3.1\u03c3 above their avg of 42 days.",
+      "evidence": {
+        "days_to_payment": 97.0,
+        "buyer_historical_avg": 42.0,
+        "z_score": 3.14,
+        "buyer": "Pacific Traders Pty",
+        "credit_rating": "B"
+      },
+      "severity": "medium",
+      "recommendation": "Flag Pacific Traders Pty for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "RULE-003",
+      "layer": "rule_based",
+      "shipment_id": "SHP-2025-0199",
+      "category": "payment",
+      "sub_type": "received_null_days",
+      "description": "Payment status = received but days_to_payment is NULL. Contradictory record.",
+      "evidence": {
+        "payment_status": "received",
+        "days_to_payment": null,
+        "buyer": "Gulf Distributors LLC"
+      },
+      "severity": "medium",
+      "recommendation": "Investigate with accounts team. Update payment date in ERP.",
+      "estimated_penalty_usd": 500,
+      "detection_method": "Rule-based arithmetic/logic check",
+      "risk_score": 50.5
+    },
+    {
+      "anomaly_id": "RULE-005",
+      "layer": "rule_based",
+      "shipment_id": "SHP-2025-0034",
+      "category": "cross_field",
+      "sub_type": "insurance_rate_error",
+      "description": "Insurance rate = 0.044% of FOB. Normal is 0.1-0.4%. SUSPICIOUSLY LOW.",
+      "evidence": {
+        "insurance_usd": 4.75,
+        "total_fob_usd": 10800.0,
+        "calculated_rate_pct": 0.044,
+        "expected_range": "0.1% - 0.4%"
+      },
+      "severity": "medium",
+      "recommendation": "Verify insurance policy. Standard marine cargo insurance = 0.1-0.3% of CIF value.",
+      "estimated_penalty_usd": 500,
+      "detection_method": "Rule-based arithmetic/logic check",
+      "risk_score": 50.5
+    },
+    {
+      "anomaly_id": "RULE-006",
+      "layer": "rule_based",
+      "shipment_id": "SHP-2025-0089",
+      "category": "cross_field",
+      "sub_type": "insurance_rate_error",
+      "description": "Insurance rate = 0.035% of FOB. Normal is 0.1-0.4%. SUSPICIOUSLY LOW.",
+      "evidence": {
+        "insurance_usd": 4.69,
+        "total_fob_usd": 13500.0,
+        "calculated_rate_pct": 0.0347,
+        "expected_range": "0.1% - 0.4%"
+      },
+      "severity": "medium",
+      "recommendation": "Verify insurance policy. Standard marine cargo insurance = 0.1-0.3% of CIF value.",
+      "estimated_penalty_usd": 500,
+      "detection_method": "Rule-based arithmetic/logic check",
+      "risk_score": 50.5
+    },
+    {
+      "anomaly_id": "RULE-007",
+      "layer": "rule_based",
+      "shipment_id": "SHP-2025-0212",
+      "category": "cross_field",
+      "sub_type": "insurance_rate_error",
+      "description": "Insurance rate = 0.018% of FOB. Normal is 0.1-0.4%. SUSPICIOUSLY LOW.",
+      "evidence": {
+        "insurance_usd": 64.92,
+        "total_fob_usd": 360000.0,
+        "calculated_rate_pct": 0.018,
+        "expected_range": "0.1% - 0.4%"
+      },
+      "severity": "medium",
+      "recommendation": "Verify insurance policy. Standard marine cargo insurance = 0.1-0.3% of CIF value.",
+      "estimated_penalty_usd": 500,
+      "detection_method": "Rule-based arithmetic/logic check",
+      "risk_score": 50.5
+    },
+    {
+      "anomaly_id": "RULE-008",
+      "layer": "rule_based",
+      "shipment_id": "SHP-2025-0241",
+      "category": "cross_field",
+      "sub_type": "insurance_rate_error",
+      "description": "Insurance rate = 2.000% of FOB. Normal is 0.1-0.4%. OVERCHARGED.",
+      "evidence": {
+        "insurance_usd": 90.0,
+        "total_fob_usd": 4500.0,
+        "calculated_rate_pct": 2.0,
+        "expected_range": "0.1% - 0.4%"
+      },
+      "severity": "medium",
+      "recommendation": "Verify insurance policy. Standard marine cargo insurance = 0.1-0.3% of CIF value.",
+      "estimated_penalty_usd": 500,
+      "detection_method": "Rule-based arithmetic/logic check",
+      "risk_score": 50.5
+    }
+  ]
+}
