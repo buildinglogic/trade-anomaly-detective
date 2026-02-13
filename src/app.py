@@ -127,7 +127,7 @@ def run_full_analysis():
         )
         st.success(f"✅ Statistical: {len(stat_anomalies)} anomalies found")
 
-    with st.spinner("🤖 Step 4/5: Layer 3 — LLM detection (Groq)..."):
+    with st.spinner("🤖 Step 4/5: Layer 3 — LLM detection (Openrouter)..."):
         from llm_detector import validate_hs_codes, generate_executive_summary, save_llm_usage_report
         llm_anomalies = validate_hs_codes(shipments_df)
         st.success(f"✅ LLM: {len(llm_anomalies)} HS code issues found")
@@ -185,7 +185,7 @@ with st.sidebar:
     st.divider()
     st.subheader("📡 System Info")
     st.caption(f"Data: {'✅ Loaded' if data_exists() else '❌ Not generated'}")
-    st.caption(f"LLM: Groq")
+    st.caption(f"LLM: Openrouter")
     st.caption(f"Statistical: Z-scores (σ=2.5)")
     st.caption(f"Updated: {datetime.datetime.now().strftime('%H:%M:%S')}")
 
