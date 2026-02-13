@@ -1,15 +1,26 @@
 {
   "planted_anomalies": 12,
-  "detected_correctly": 11,
-  "missed": 1,
-  "false_positives": 7,
-  "precision": 0.611,
-  "recall": 0.917,
-  "f1_score": 0.733,
+  "detected_correctly": 10,
+  "missed": 2,
+  "false_positives": 9,
+  "precision": 0.526,
+  "recall": 0.833,
+  "f1_score": 0.645,
   "missed_anomalies": [
+    "PLANTED-006",
     "PLANTED-010"
   ],
   "missed_details": [
+    {
+      "anomaly_id": "PLANTED-006",
+      "shipment_id": "SHP-2025-0156",
+      "category": "route_logistics",
+      "sub_type": "freight_cost_spike",
+      "description": "INMUN1\u2192DEHAM 40ft container avg freight $1,800. This shipment shows $7,200 \u2014 exactly 4x the average.",
+      "why_this_matters": "Inflated freight = inflated CIF value = lower import duty for buyer OR kickback to freight forwarder. Margin loss: $5,400 per shipment.",
+      "estimated_penalty_usd": 5400,
+      "severity": "high"
+    },
     {
       "anomaly_id": "PLANTED-010",
       "shipment_id": "SHP-2025-0230",
@@ -23,33 +34,33 @@
   ],
   "false_positive_details": [
     {
-      "anomaly_id": "STAT-009",
-      "shipment_id": "SHP-2025-0239",
-      "why_flagged": "London Imports Ltd paid in 113 days \u2014 4.0\u03c3 above their avg of 45 days.",
-      "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
-    },
-    {
-      "anomaly_id": "STAT-012",
-      "shipment_id": "SHP-2025-0073",
-      "why_flagged": "SG Merchants Pte paid in 90 days \u2014 4.4\u03c3 above their avg of 25 days.",
-      "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
-    },
-    {
-      "anomaly_id": "STAT-004",
-      "shipment_id": "SHP-2025-0138",
-      "why_flagged": "African Goods Co paid in 144 days \u2014 3.1\u03c3 above their avg of 52 days.",
+      "anomaly_id": "STAT-003",
+      "shipment_id": "SHP-2025-0026",
+      "why_flagged": "African Goods Co paid in 138 days \u2014 4.8\u03c3 above their avg of 52 days.",
       "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
     },
     {
       "anomaly_id": "STAT-005",
-      "shipment_id": "SHP-2025-0158",
-      "why_flagged": "African Goods Co paid in 133 days \u2014 2.7\u03c3 above their avg of 52 days.",
+      "shipment_id": "SHP-2025-0102",
+      "why_flagged": "Global Mart Inc paid in 105 days \u2014 2.8\u03c3 above their avg of 38 days.",
+      "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
+    },
+    {
+      "anomaly_id": "STAT-006",
+      "shipment_id": "SHP-2025-0038",
+      "why_flagged": "Global Mart Inc paid in 106 days \u2014 2.9\u03c3 above their avg of 38 days.",
       "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
     },
     {
       "anomaly_id": "STAT-007",
-      "shipment_id": "SHP-2025-0233",
-      "why_flagged": "Global Mart Inc paid in 108 days \u2014 2.9\u03c3 above their avg of 38 days.",
+      "shipment_id": "SHP-2025-0024",
+      "why_flagged": "London Imports Ltd paid in 117 days \u2014 3.4\u03c3 above their avg of 45 days.",
+      "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
+    },
+    {
+      "anomaly_id": "STAT-008",
+      "shipment_id": "SHP-2025-0209",
+      "why_flagged": "Nippon Commerce KK paid in 85 days \u2014 3.0\u03c3 above their avg of 35 days.",
       "why_its_actually_fine": "Flagged by statistical model as outlier but within acceptable variance for this product/route combination."
     }
   ]

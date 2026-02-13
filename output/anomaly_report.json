@@ -1,42 +1,22 @@
 {
-  "report_generated_at": "2026-02-12T20:56:34.061650Z",
+  "report_generated_at": "2026-02-13T05:27:55.175971Z",
   "total_shipments": 250,
-  "total_anomalies": 21,
+  "total_anomalies": 20,
   "anomalies_by_category": {
-    "compliance": 2,
     "pricing": 2,
-    "route_logistics": 2,
+    "compliance": 1,
+    "route_logistics": 1,
     "cross_field": 5,
-    "payment": 10
+    "payment": 11
   },
   "anomalies_by_severity": {
-    "critical": 3,
-    "high": 6,
-    "medium": 12
+    "critical": 2,
+    "high": 5,
+    "medium": 13
   },
-  "total_estimated_penalty_usd": 52550,
-  "total_estimated_penalty_inr": 4361650,
+  "total_estimated_penalty_usd": 43550,
+  "total_estimated_penalty_inr": 3614650,
   "anomalies": [
-    {
-      "anomaly_id": "LLM-001",
-      "layer": "llm",
-      "shipment_id": "SHP-2025-0089",
-      "category": "compliance",
-      "sub_type": "hs_code_mismatch",
-      "description": "HS code 84713000 does not match 'Cotton T-shirts 100% knitted'. Incorrect classification, should be under Chapter 61 for knitted/crocheted clothing",
-      "evidence": {
-        "hs_code_used": "84713000",
-        "product": "Cotton T-shirts 100% knitted",
-        "llm_verdict": "INCORRECT",
-        "correct_chapter": "61",
-        "llm_reason": "Incorrect classification, should be under Chapter 61 for knitted/crocheted clothing"
-      },
-      "severity": "critical",
-      "recommendation": "Re-classify under correct HS chapter: 61. File amendment with customs. Penalty: \u20b950K-\u20b92L.",
-      "estimated_penalty_usd": 6000,
-      "detection_method": "LLM: Groq Mixtral HS classification check",
-      "risk_score": 106.0
-    },
     {
       "anomaly_id": "RULE-001",
       "layer": "rule_based",
@@ -81,12 +61,12 @@
       "shipment_id": "SHP-2025-0067",
       "category": "pricing",
       "sub_type": "price_outlier",
-      "description": "Cotton T-shirts 100% knitted: unit_price $0.80 is 3.1\u03c3 LOW from mean $4.44.",
+      "description": "Cotton T-shirts 100% knitted: unit_price $0.80 is 3.2\u03c3 LOW from mean $4.68.",
       "evidence": {
         "unit_price": 0.8,
-        "product_mean": 4.44,
-        "product_std": 1.16,
-        "z_score": -3.14,
+        "product_mean": 4.68,
+        "product_std": 1.23,
+        "z_score": -3.17,
         "catalog_range": "$3.0 - $6.5",
         "buyer": "Gulf Distributors LLC"
       },
@@ -97,38 +77,17 @@
       "risk_score": 83.0
     },
     {
-      "anomaly_id": "STAT-003",
-      "layer": "statistical",
-      "shipment_id": "SHP-2025-0156",
-      "category": "route_logistics",
-      "sub_type": "freight_cost_outlier",
-      "description": "Freight cost $7,200 for INMUN1\u2192DEHAM (40ft) is 3.0\u03c3 HIGH from route avg $2,258.",
-      "evidence": {
-        "freight_cost": 7200.0,
-        "route_avg_freight": 2257.91,
-        "route_std": 1645.47,
-        "z_score": 3.0,
-        "route": "INMUN1 \u2192 DEHAM",
-        "container_type": "40ft"
-      },
-      "severity": "high",
-      "recommendation": "Verify with freight forwarder. Get 2 competitive quotes. Check for kickback arrangements.",
-      "estimated_penalty_usd": 5000,
-      "detection_method": "Z-score (threshold=2.5)",
-      "risk_score": 80.0
-    },
-    {
       "anomaly_id": "STAT-002",
       "layer": "statistical",
       "shipment_id": "SHP-2025-0127",
       "category": "route_logistics",
       "sub_type": "transit_days_outlier",
-      "description": "Route INMUN1\u2192AEJEA: transit 45 days is 5.3\u03c3 from route mean 10 days.",
+      "description": "Route INMUN1\u2192AEJEA: transit 45 days is 4.6\u03c3 from route mean 10 days.",
       "evidence": {
         "transit_days": 45,
-        "route_mean": 9.8,
-        "route_std": 6.6,
-        "z_score": 5.3,
+        "route_mean": 9.9,
+        "route_std": 7.7,
+        "z_score": 4.58,
         "route": "INMUN1 \u2192 AEJEA"
       },
       "severity": "high",
@@ -147,7 +106,7 @@
       "evidence": {
         "incoterm": "CIF",
         "freight_cost_usd": 0.0,
-        "total_fob": 5727.6
+        "total_fob": 19112.94
       },
       "severity": "high",
       "recommendation": "Check if freight was invoiced separately. Update freight_cost_usd or change incoterm.",
@@ -156,41 +115,21 @@
       "risk_score": 77.5
     },
     {
-      "anomaly_id": "STAT-009",
+      "anomaly_id": "STAT-003",
       "layer": "statistical",
-      "shipment_id": "SHP-2025-0239",
+      "shipment_id": "SHP-2025-0026",
       "category": "payment",
       "sub_type": "payment_delay",
-      "description": "London Imports Ltd paid in 113 days \u2014 4.0\u03c3 above their avg of 45 days.",
+      "description": "African Goods Co paid in 138 days \u2014 4.8\u03c3 above their avg of 52 days.",
       "evidence": {
-        "days_to_payment": 113.0,
-        "buyer_historical_avg": 45.0,
-        "z_score": 4.04,
-        "buyer": "London Imports Ltd",
-        "credit_rating": "B"
+        "days_to_payment": 138.0,
+        "buyer_historical_avg": 52.0,
+        "z_score": 4.83,
+        "buyer": "African Goods Co",
+        "credit_rating": "C"
       },
       "severity": "high",
-      "recommendation": "Flag London Imports Ltd for credit review. Consider LC instead of Open Account.",
-      "estimated_penalty_usd": 2000,
-      "detection_method": "Z-score (threshold=2.5)",
-      "risk_score": 77.0
-    },
-    {
-      "anomaly_id": "STAT-012",
-      "layer": "statistical",
-      "shipment_id": "SHP-2025-0073",
-      "category": "payment",
-      "sub_type": "payment_delay",
-      "description": "SG Merchants Pte paid in 90 days \u2014 4.4\u03c3 above their avg of 25 days.",
-      "evidence": {
-        "days_to_payment": 90.0,
-        "buyer_historical_avg": 25.0,
-        "z_score": 4.36,
-        "buyer": "SG Merchants Pte",
-        "credit_rating": "A"
-      },
-      "severity": "high",
-      "recommendation": "Flag SG Merchants Pte for credit review. Consider LC instead of Open Account.",
+      "recommendation": "Flag African Goods Co for credit review. Consider LC instead of Open Account.",
       "estimated_penalty_usd": 2000,
       "detection_method": "Z-score (threshold=2.5)",
       "risk_score": 77.0
@@ -198,39 +137,39 @@
     {
       "anomaly_id": "STAT-004",
       "layer": "statistical",
-      "shipment_id": "SHP-2025-0138",
+      "shipment_id": "SHP-2025-0187",
       "category": "payment",
       "sub_type": "payment_delay",
-      "description": "African Goods Co paid in 144 days \u2014 3.1\u03c3 above their avg of 52 days.",
+      "description": "Euro Trade GmbH paid in 110 days \u2014 4.3\u03c3 above their avg of 32 days.",
       "evidence": {
-        "days_to_payment": 144.0,
-        "buyer_historical_avg": 52.0,
-        "z_score": 3.11,
-        "buyer": "African Goods Co",
-        "credit_rating": "C"
+        "days_to_payment": 110.0,
+        "buyer_historical_avg": 32.0,
+        "z_score": 4.28,
+        "buyer": "Euro Trade GmbH",
+        "credit_rating": "A"
       },
-      "severity": "medium",
-      "recommendation": "Flag African Goods Co for credit review. Consider LC instead of Open Account.",
+      "severity": "high",
+      "recommendation": "Flag Euro Trade GmbH for credit review. Consider LC instead of Open Account.",
       "estimated_penalty_usd": 2000,
       "detection_method": "Z-score (threshold=2.5)",
-      "risk_score": 52.0
+      "risk_score": 77.0
     },
     {
       "anomaly_id": "STAT-005",
       "layer": "statistical",
-      "shipment_id": "SHP-2025-0158",
+      "shipment_id": "SHP-2025-0102",
       "category": "payment",
       "sub_type": "payment_delay",
-      "description": "African Goods Co paid in 133 days \u2014 2.7\u03c3 above their avg of 52 days.",
+      "description": "Global Mart Inc paid in 105 days \u2014 2.8\u03c3 above their avg of 38 days.",
       "evidence": {
-        "days_to_payment": 133.0,
-        "buyer_historical_avg": 52.0,
-        "z_score": 2.68,
-        "buyer": "African Goods Co",
-        "credit_rating": "C"
+        "days_to_payment": 105.0,
+        "buyer_historical_avg": 38.0,
+        "z_score": 2.84,
+        "buyer": "Global Mart Inc",
+        "credit_rating": "A"
       },
       "severity": "medium",
-      "recommendation": "Flag African Goods Co for credit review. Consider LC instead of Open Account.",
+      "recommendation": "Flag Global Mart Inc for credit review. Consider LC instead of Open Account.",
       "estimated_penalty_usd": 2000,
       "detection_method": "Z-score (threshold=2.5)",
       "risk_score": 52.0
@@ -238,32 +177,12 @@
     {
       "anomaly_id": "STAT-006",
       "layer": "statistical",
-      "shipment_id": "SHP-2025-0187",
+      "shipment_id": "SHP-2025-0038",
       "category": "payment",
       "sub_type": "payment_delay",
-      "description": "Euro Trade GmbH paid in 110 days \u2014 3.5\u03c3 above their avg of 32 days.",
+      "description": "Global Mart Inc paid in 106 days \u2014 2.9\u03c3 above their avg of 38 days.",
       "evidence": {
-        "days_to_payment": 110.0,
-        "buyer_historical_avg": 32.0,
-        "z_score": 3.49,
-        "buyer": "Euro Trade GmbH",
-        "credit_rating": "A"
-      },
-      "severity": "medium",
-      "recommendation": "Flag Euro Trade GmbH for credit review. Consider LC instead of Open Account.",
-      "estimated_penalty_usd": 2000,
-      "detection_method": "Z-score (threshold=2.5)",
-      "risk_score": 52.0
-    },
-    {
-      "anomaly_id": "STAT-007",
-      "layer": "statistical",
-      "shipment_id": "SHP-2025-0233",
-      "category": "payment",
-      "sub_type": "payment_delay",
-      "description": "Global Mart Inc paid in 108 days \u2014 2.9\u03c3 above their avg of 38 days.",
-      "evidence": {
-        "days_to_payment": 108.0,
+        "days_to_payment": 106.0,
         "buyer_historical_avg": 38.0,
         "z_score": 2.89,
         "buyer": "Global Mart Inc",
@@ -276,36 +195,36 @@
       "risk_score": 52.0
     },
     {
-      "anomaly_id": "STAT-008",
+      "anomaly_id": "STAT-007",
       "layer": "statistical",
-      "shipment_id": "SHP-2025-0223",
+      "shipment_id": "SHP-2025-0024",
       "category": "payment",
       "sub_type": "payment_delay",
-      "description": "Global Mart Inc paid in 104 days \u2014 2.7\u03c3 above their avg of 38 days.",
+      "description": "London Imports Ltd paid in 117 days \u2014 3.4\u03c3 above their avg of 45 days.",
       "evidence": {
-        "days_to_payment": 104.0,
-        "buyer_historical_avg": 38.0,
-        "z_score": 2.7,
-        "buyer": "Global Mart Inc",
-        "credit_rating": "A"
+        "days_to_payment": 117.0,
+        "buyer_historical_avg": 45.0,
+        "z_score": 3.37,
+        "buyer": "London Imports Ltd",
+        "credit_rating": "B"
       },
       "severity": "medium",
-      "recommendation": "Flag Global Mart Inc for credit review. Consider LC instead of Open Account.",
+      "recommendation": "Flag London Imports Ltd for credit review. Consider LC instead of Open Account.",
       "estimated_penalty_usd": 2000,
       "detection_method": "Z-score (threshold=2.5)",
       "risk_score": 52.0
     },
     {
-      "anomaly_id": "STAT-010",
+      "anomaly_id": "STAT-008",
       "layer": "statistical",
-      "shipment_id": "SHP-2025-0045",
+      "shipment_id": "SHP-2025-0209",
       "category": "payment",
       "sub_type": "payment_delay",
-      "description": "Nippon Commerce KK paid in 81 days \u2014 2.8\u03c3 above their avg of 35 days.",
+      "description": "Nippon Commerce KK paid in 85 days \u2014 3.0\u03c3 above their avg of 35 days.",
       "evidence": {
-        "days_to_payment": 81.0,
+        "days_to_payment": 85.0,
         "buyer_historical_avg": 35.0,
-        "z_score": 2.76,
+        "z_score": 2.98,
         "buyer": "Nippon Commerce KK",
         "credit_rating": "A"
       },
@@ -316,21 +235,81 @@
       "risk_score": 52.0
     },
     {
-      "anomaly_id": "STAT-011",
+      "anomaly_id": "STAT-009",
       "layer": "statistical",
-      "shipment_id": "SHP-2025-0241",
+      "shipment_id": "SHP-2025-0118",
       "category": "payment",
       "sub_type": "payment_delay",
-      "description": "Pacific Traders Pty paid in 97 days \u2014 3.1\u03c3 above their avg of 42 days.",
+      "description": "Pacific Traders Pty paid in 100 days \u2014 2.8\u03c3 above their avg of 42 days.",
       "evidence": {
-        "days_to_payment": 97.0,
+        "days_to_payment": 100.0,
         "buyer_historical_avg": 42.0,
-        "z_score": 3.14,
+        "z_score": 2.82,
         "buyer": "Pacific Traders Pty",
         "credit_rating": "B"
       },
       "severity": "medium",
       "recommendation": "Flag Pacific Traders Pty for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "STAT-010",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0068",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "Pacific Traders Pty paid in 103 days \u2014 3.0\u03c3 above their avg of 42 days.",
+      "evidence": {
+        "days_to_payment": 103.0,
+        "buyer_historical_avg": 42.0,
+        "z_score": 2.98,
+        "buyer": "Pacific Traders Pty",
+        "credit_rating": "B"
+      },
+      "severity": "medium",
+      "recommendation": "Flag Pacific Traders Pty for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "STAT-011",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0109",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "SG Merchants Pte paid in 77 days \u2014 2.6\u03c3 above their avg of 25 days.",
+      "evidence": {
+        "days_to_payment": 77.0,
+        "buyer_historical_avg": 25.0,
+        "z_score": 2.64,
+        "buyer": "SG Merchants Pte",
+        "credit_rating": "A"
+      },
+      "severity": "medium",
+      "recommendation": "Flag SG Merchants Pte for credit review. Consider LC instead of Open Account.",
+      "estimated_penalty_usd": 2000,
+      "detection_method": "Z-score (threshold=2.5)",
+      "risk_score": 52.0
+    },
+    {
+      "anomaly_id": "STAT-012",
+      "layer": "statistical",
+      "shipment_id": "SHP-2025-0039",
+      "category": "payment",
+      "sub_type": "payment_delay",
+      "description": "SG Merchants Pte paid in 80 days \u2014 2.8\u03c3 above their avg of 25 days.",
+      "evidence": {
+        "days_to_payment": 80.0,
+        "buyer_historical_avg": 25.0,
+        "z_score": 2.83,
+        "buyer": "SG Merchants Pte",
+        "credit_rating": "A"
+      },
+      "severity": "medium",
+      "recommendation": "Flag SG Merchants Pte for credit review. Consider LC instead of Open Account.",
       "estimated_penalty_usd": 2000,
       "detection_method": "Z-score (threshold=2.5)",
       "risk_score": 52.0
@@ -359,11 +338,11 @@
       "shipment_id": "SHP-2025-0034",
       "category": "cross_field",
       "sub_type": "insurance_rate_error",
-      "description": "Insurance rate = 0.044% of FOB. Normal is 0.1-0.4%. SUSPICIOUSLY LOW.",
+      "description": "Insurance rate = 0.889% of FOB. Normal is 0.1-0.4%. OVERCHARGED.",
       "evidence": {
-        "insurance_usd": 4.75,
+        "insurance_usd": 96.06,
         "total_fob_usd": 10800.0,
-        "calculated_rate_pct": 0.044,
+        "calculated_rate_pct": 0.8894,
         "expected_range": "0.1% - 0.4%"
       },
       "severity": "medium",
@@ -378,11 +357,11 @@
       "shipment_id": "SHP-2025-0089",
       "category": "cross_field",
       "sub_type": "insurance_rate_error",
-      "description": "Insurance rate = 0.035% of FOB. Normal is 0.1-0.4%. SUSPICIOUSLY LOW.",
+      "description": "Insurance rate = 27.257% of FOB. Normal is 0.1-0.4%. OVERCHARGED.",
       "evidence": {
-        "insurance_usd": 4.69,
+        "insurance_usd": 3679.66,
         "total_fob_usd": 13500.0,
-        "calculated_rate_pct": 0.0347,
+        "calculated_rate_pct": 27.2567,
         "expected_range": "0.1% - 0.4%"
       },
       "severity": "medium",
@@ -397,11 +376,11 @@
       "shipment_id": "SHP-2025-0212",
       "category": "cross_field",
       "sub_type": "insurance_rate_error",
-      "description": "Insurance rate = 0.018% of FOB. Normal is 0.1-0.4%. SUSPICIOUSLY LOW.",
+      "description": "Insurance rate = 0.003% of FOB. Normal is 0.1-0.4%. SUSPICIOUSLY LOW.",
       "evidence": {
-        "insurance_usd": 64.92,
+        "insurance_usd": 10.93,
         "total_fob_usd": 360000.0,
-        "calculated_rate_pct": 0.018,
+        "calculated_rate_pct": 0.003,
         "expected_range": "0.1% - 0.4%"
       },
       "severity": "medium",

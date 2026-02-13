@@ -5,6 +5,7 @@ Layer 3: LLM-powered detection using OpenRouter API (Aurora Alpha - free).
 
 import os
 import json
+import re
 import time
 import datetime
 import pandas as pd
@@ -106,8 +107,8 @@ def call_openrouter(prompt: str, task_name: str, max_retries: int = 3) -> str:
                 "messages": [
                     {"role": "user", "content": prompt}
                 ],
-                "temperature": 0.3,
-                "max_tokens": 2000
+                "temperature": 0.1,
+                "max_tokens": 3000
             }
             
             response = requests.post(API_URL, headers=headers, json=data, timeout=30)
@@ -151,6 +152,107 @@ def call_openrouter(prompt: str, task_name: str, max_retries: int = 3) -> str:
     return "[LLM MAX RETRIES EXCEEDED]"
 
 
+def extract_json_from_response(response: str) -> list:
+    """Extract and parse JSON from LLM response with multiple fallback strategies"""
+    
+    # Strategy 1: Remove markdown code blocks
+    clean = response.strip()
+    if "```" in clean:
+        # Extract content between ```json and ``` or just between ```
+        pattern = r'```(?:json)?\s*(\[.*?\])\s*```'
+        matches = re.findall(pattern, clean, re.DOTALL)
+        if matches:
+            clean = matches[0]
+        else:
+            # Try to get anything between ```
+            parts = clean.split("```")
+            for part in parts:
+                part = part.strip()
+                if part.startswith("json"):
+                    part = part[4:].strip()
+                if part.startswith("["):
+                    clean = part
+                    break
+    
+    # Strategy 2: Find JSON array in text
+    if not clean.startswith("["):
+        match = re.search(r'\[.*\]', clean, re.DOTALL)
+        if match:
+            clean = match.group(0)
+    
+    # Strategy 3: Try to parse as-is
+    try:
+        results = json.loads(clean)
+        if isinstance(results, dict):
+            results = [results]
+        print(f"   ✅ Parsed {len(results)} entries from JSON")
+        return results
+    except json.JSONDecodeError as e:
+        print(f"   ⚠️ JSON parse failed: {str(e)[:100]}")
+        
+        # Strategy 4: Try to fix common JSON issues
+        try:
+            # Fix unescaped quotes in strings
+            fixed = re.sub(r'(?<!\\)"(?=([^"\\]*(\\.[^"\\]*)*)"[^"]*$)', r'\"', clean)
+            results = json.loads(fixed)
+            if isinstance(results, dict):
+                results = [results]
+            print(f"   ✅ Fixed with quote escaping: {len(results)} entries")
+            return results
+        except:
+            pass
+        
+        # Strategy 5: Manual parsing for simple cases
+        try:
+            # Look for is_correct: false entries
+            incorrect_entries = []
+            
+            # More lenient patterns
+            shipment_pattern = r'"shipment_id"\s*:\s*"([^"]+)"'
+            hs_pattern = r'"hs_code"\s*:\s*"([^"]+)"'
+            product_pattern = r'"product"\s*:\s*"([^"]+?)"(?=,|\})'
+            correct_pattern = r'"is_correct"\s*:\s*(false|true)'
+            reason_pattern = r'"reason"\s*:\s*"([^"]+?)"(?=,|\})'
+            chapter_pattern = r'"correct_hs_chapter"\s*:\s*"([^"]+?)"(?=,|\})'
+            
+            # Split by likely record boundaries
+            records = re.split(r'\}\s*,?\s*\{', clean)
+            
+            for record in records:
+                # Add back braces if needed
+                if not record.startswith('{'):
+                    record = '{' + record
+                if not record.endswith('}'):
+                    record = record + '}'
+                
+                correct_match = re.search(correct_pattern, record, re.DOTALL)
+                if correct_match and correct_match.group(1) == 'false':
+                    shipment_match = re.search(shipment_pattern, record)
+                    hs_match = re.search(hs_pattern, record)
+                    product_match = re.search(product_pattern, record, re.DOTALL)
+                    reason_match = re.search(reason_pattern, record, re.DOTALL)
+                    chapter_match = re.search(chapter_pattern, record, re.DOTALL)
+                    
+                    if shipment_match and hs_match and product_match:
+                        entry = {
+                            "shipment_id": shipment_match.group(1),
+                            "hs_code": hs_match.group(1),
+                            "product": product_match.group(1).strip(),
+                            "is_correct": False,
+                            "reason": reason_match.group(1).strip() if reason_match else "HS code mismatch",
+                            "correct_hs_chapter": chapter_match.group(1).strip() if chapter_match else "Unknown"
+                        }
+                        incorrect_entries.append(entry)
+            
+            if incorrect_entries:
+                print(f"   ✅ Manually extracted {len(incorrect_entries)} entries")
+                return incorrect_entries
+        except Exception as e:
+            print(f"   ⚠️ Manual parsing failed: {str(e)[:100]}")
+        
+        return []
+
+
 def validate_hs_codes(shipments_df: pd.DataFrame) -> list:
     """Validate HS codes using LLM"""
     anomalies = []
@@ -163,32 +265,37 @@ def validate_hs_codes(shipments_df: pd.DataFrame) -> list:
     print(f"   LLM: Validating {len(unique_combos)} unique HS codes...")
 
     combos_text = "\n".join([
-        f"- {row['shipment_id']}: HS {row['hs_code']} = '{row['product_description']}'"
+        f"{row['shipment_id']}: HS_{row['hs_code']} -> {row['product_description']}"
         for _, row in unique_combos.iterrows()
     ])
 
-    prompt = f"""You are an Indian customs HS code expert. Check if these HS codes correctly classify the products.
+    prompt = f"""You are an HS code auditor. Find MISMATCHED HS codes where the product and code are from DIFFERENT CHAPTERS.
 
-HS Code Reference:
-- 61091000 = Knitted T-shirts
-- 62114900 = Sarees (other women's garments)
-- 84713000 = Laptops/computers
-- 84137000 = Centrifugal pumps
-- 87083010 = Brake pads
-- 42021200 = Leather wallets
-- 09041100 = Black pepper
-- 10063020 = Basmati rice
-- 30049099 = Pharmaceutical tablets
-- 39021000 = Polypropylene plastic
-- 73239300 = Stainless steel utensils
-- 83062910 = Brass figurines
-- 94054090 = LED lights
+KEY CHAPTERS:
+Chapter 84 = COMPUTERS/MACHINERY (84713000 = laptops/processors/computers)
+Chapter 61 = KNITTED TEXTILES (61091000 = T-shirts/cotton knits)
+Chapter 62 = WOVEN TEXTILES (62046200 = trousers)
+Chapter 87 = VEHICLES (87083010 = brake pads)
+Chapter 42 = LEATHER (42021200 = wallets)
+Chapter 09 = SPICES (09041100 = pepper)
 
-Check these entries:
+SHIPMENTS TO CHECK:
 {combos_text}
 
-Return ONLY valid JSON array (no markdown, no code blocks):
-[{{"shipment_id":"SHP-XXX","hs_code":"XXXXX","product":"...","is_correct":true/false,"reason":"...","correct_hs_chapter":"XX - name"}}]"""
+EXAMPLE ERRORS:
+✗ HS_84713000 (computers Ch.84) for "Cotton T-shirts" = WRONG (textiles Ch.61)
+✗ HS_61091000 (textiles Ch.61) for "Laptop computers" = WRONG (computers Ch.84)
+✓ HS_61091000 (textiles Ch.61) for "Cotton T-shirts" = CORRECT
+
+YOUR TASK:
+Find entries where HS code chapter does NOT match product type.
+
+Return ONLY JSON array (NO markdown, NO ```):
+[
+  {{"shipment_id":"SHP-2025-0089","hs_code":"84713000","product":"Cotton T-shirts 100% knitted","is_correct":false,"reason":"Textiles Chapter 61, not computers Chapter 84","correct_hs_chapter":"61 - Knitted textiles"}}
+]
+
+Include ONLY entries with is_correct: false. Be strict - if chapters don't match, mark false."""
 
     response = call_openrouter(prompt, "hs_code_validation")
     usage_log["breakdown_by_task"]["hs_code_validation"]["description"] = "HS code validation"
@@ -197,32 +304,57 @@ Return ONLY valid JSON array (no markdown, no code blocks):
         print(f"   ⚠️ Skipped: {response}")
         return anomalies
 
-    try:
-        clean = response.strip()
-        
-        # Remove markdown
-        if "```" in clean:
-            parts = clean.split("```")
-            for part in parts:
-                part = part.strip()
-                if part.startswith("json"):
-                    part = part[4:].strip()
-                if part.startswith("["):
-                    clean = part
-                    break
-        
-        results = json.loads(clean)
-        if not isinstance(results, list):
-            results = [results]
+    results = extract_json_from_response(response)
+    
+    if not results:
+        print(f"   ⚠️ Could not parse any results from LLM response")
+        return anomalies
 
-        for item in results:
-            if not item.get("is_correct", True):
-                counter[0] += 1
-                affected = shipments_df[
-                    (shipments_df['hs_code'] == item.get('hs_code', '')) &
-                    (shipments_df['product_description'] == item.get('product', ''))
-                ]
-                
+    for item in results:
+        if not item.get("is_correct", True):
+            counter[0] += 1
+            
+            # Get the HS code and product from LLM response
+            hs_code = str(item.get('hs_code', '')).strip()
+            product = str(item.get('product', '')).strip()
+            
+            # Find matching rows - try exact match first
+            affected = shipments_df[
+                (shipments_df['hs_code'].astype(str).str.strip() == hs_code) &
+                (shipments_df['product_description'].astype(str).str.strip() == product)
+            ]
+            
+            # If no exact match, try matching just by HS code (since product might have minor differences)
+            if len(affected) == 0:
+                print(f"   🔍 No exact match, trying HS code only for: {hs_code}")
+                affected = shipments_df[shipments_df['hs_code'].astype(str).str.strip() == hs_code]
+            
+            print(f"   🎯 Found {len(affected)} affected shipments for HS {hs_code}")
+            
+            if len(affected) == 0:
+                # If still no match, create anomaly using the shipment_id from LLM
+                shipment_id = item.get('shipment_id', 'UNKNOWN')
+                anomalies.append({
+                    "anomaly_id": f"LLM-{counter[0]:03d}",
+                    "layer": "llm",
+                    "shipment_id": shipment_id,
+                    "category": "compliance",
+                    "sub_type": "hs_code_mismatch",
+                    "description": f"HS {hs_code} incorrect for '{product}'. {item.get('reason', '')}",
+                    "evidence": {
+                        "hs_code_used": hs_code,
+                        "product": product,
+                        "llm_verdict": "INCORRECT",
+                        "correct_chapter": item.get('correct_hs_chapter', 'Unknown'),
+                        "llm_reason": item.get('reason', '')
+                    },
+                    "severity": "critical",
+                    "recommendation": f"Reclassify under {item.get('correct_hs_chapter')}. File amendment. Penalty: ₹50K-₹2L.",
+                    "estimated_penalty_usd": 6000,
+                    "detection_method": "LLM: OpenRouter Aurora Alpha"
+                })
+            else:
+                # Create anomaly for each affected shipment
                 for _, row in affected.iterrows():
                     anomalies.append({
                         "anomaly_id": f"LLM-{counter[0]:03d}",
@@ -230,10 +362,10 @@ Return ONLY valid JSON array (no markdown, no code blocks):
                         "shipment_id": row['shipment_id'],
                         "category": "compliance",
                         "sub_type": "hs_code_mismatch",
-                        "description": f"HS {item.get('hs_code')} incorrect for '{item.get('product')}'. {item.get('reason', '')}",
+                        "description": f"HS {hs_code} incorrect for '{product}'. {item.get('reason', '')}",
                         "evidence": {
-                            "hs_code_used": item.get('hs_code'),
-                            "product": item.get('product'),
+                            "hs_code_used": hs_code,
+                            "product": product,
                             "llm_verdict": "INCORRECT",
                             "correct_chapter": item.get('correct_hs_chapter', 'Unknown'),
                             "llm_reason": item.get('reason', '')
@@ -243,9 +375,6 @@ Return ONLY valid JSON array (no markdown, no code blocks):
                         "estimated_penalty_usd": 6000,
                         "detection_method": "LLM: OpenRouter Aurora Alpha"
                     })
-
-    except Exception as e:
-        print(f"   ⚠️ Parse error: {e}")
 
     print(f"   LLM: {len(anomalies)} HS issues found")
     return anomalies

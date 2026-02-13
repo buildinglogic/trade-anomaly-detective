@@ -1,26 +1,26 @@
 {
-  "provider": "Groq API",
-  "model": "llama-3.3-70b-versatile",
-  "total_calls": 2,
+  "provider": "OpenRouter",
+  "model": "openrouter/aurora-alpha",
+  "total_calls": 4,
   "total_tokens": {
-    "input": 1059,
-    "output": 1276,
-    "total": 2335
+    "input": 1791,
+    "output": 1633,
+    "total": 3424
   },
   "estimated_cost_usd": 0.0,
   "breakdown_by_task": {
     "hs_code_validation": {
-      "calls": 1,
-      "tokens": 1484,
-      "description": "Batch validation of unique HS code + product description combinations"
+      "calls": 2,
+      "tokens": 1270,
+      "description": "HS code validation"
     },
     "executive_summary": {
-      "calls": 1,
-      "tokens": 851,
-      "description": "One-page executive summary for Operations Head"
+      "calls": 2,
+      "tokens": 2154,
+      "description": "Executive summary"
     }
   },
-  "avg_latency_ms": 2421,
-  "timestamp": "2026-02-12T20:56:29.200348Z",
-  "notes": "Groq - Free tier, unlimited API calls. Cost: $0.00 | 2 total calls made."
+  "avg_latency_ms": 4163,
+  "timestamp": "2026-02-13T05:27:27.091984Z",
+  "notes": "OpenRouter Aurora Alpha - free tier. Cost: $0.00 | 2 calls made. | 4 calls made."
 }
