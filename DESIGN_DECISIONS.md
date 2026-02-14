@@ -121,7 +121,6 @@ Return ONLY the JSON array, no other text.
 - **F1**: ~0.80-0.90
 
 **Why the system misses what it misses:**
-- PLANTED-010 (country volume spike) is detected as a volume anomaly at buyer level but may be attributed to buyer ID rather than the shipment ID since it's a monthly aggregation
 - Very borderline statistical outliers (just above σ=2.5 threshold) may generate near-misses
 
 **Why false positives occur:**
