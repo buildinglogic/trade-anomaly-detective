@@ -10,7 +10,24 @@ An AI-powered 3-layer anomaly detection system for Indian export trade shipments
 ## Architecture
 ```
 Layer 1 (Rule-Based)     → Arithmetic & logic checks (5 rules)
-Layer 2 (Statistical)    → Z-score outlier detection (6 checks)  
+## 🏗️ **FILE STRUCTURE**
+
+`rule_engine.py
+├─ make_anomaly() helper → Creates standardized anomaly records
+├─ CHECK 1: FOB math error (arithmetic)
+├─ CHECK 2: Drawback on rejected shipment (business logic)
+├─ CHECK 3: Payment received but days=null (data integrity)
+├─ CHECK 4: CIF but freight=0 (Incoterm violation)
+└─ CHECK 5: Insurance rate outside normal bounds (industry standard)`
+Layer 2 (Statistical)    → Z-score outlier detection (6 checks)
+statistical_detector.py
+├─ zscore() helper function → Safe Z-score calculation
+├─ STAT-1: Price outliers per product
+├─ STAT-2: Transit time outliers per route
+├─ STAT-3: Freight cost outliers per route+container
+├─ STAT-4: Payment behavior change per buyer
+├─ STAT-5: Volume spikes per buyer (monthly)
+└─ STAT-6: Country volume spikes (monthly)  
 Layer 3 (LLM-Powered)    → Gemini 1.5 Flash for HS code validation & summary
 ```
 
