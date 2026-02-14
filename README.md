@@ -18,7 +18,7 @@ Layer 3 (LLM-Powered)    → Gemini 1.5 Flash for HS code validation & summary
 
 ### Prerequisites
 - Python 3.10+
-- Free Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
+- Free openrouter key
 
 ### Installation
 ```bash
@@ -34,7 +34,7 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
 # Add your API key
-echo "GEMINI_API_KEY=your_key_here" > .env
+echo "PENROUTER_API_KEY = "sk-your-openrouter-api-key" > .env
 ```
 
 ### Run
@@ -60,7 +60,7 @@ python src/llm_detector.py
 |-------|--------|--------|
 | Rule-Based | Arithmetic logic | FOB math, drawback on rejected, CIF/freight, insurance rate, payment status |
 | Statistical | Z-scores (σ=2.5) | Price outliers, transit outliers, freight outliers, payment delays, volume spikes |
-| LLM | Gemini 1.5 Flash | HS code classification, executive summary |
+| LLM | Openrouter | HS code classification, executive summary |
 
 ## Planted Anomalies
 
@@ -78,4 +78,4 @@ python src/llm_detector.py
 
 ## LLM Cost
 
-Gemini 1.5 Flash free tier: **$0.00** for this workload (~3 API calls, ~2,500 tokens total).
+OpenRouter free models (using `:free` variants): **$0.00** for this workload (~3 API calls, ~2,500 tokens total, within free tier limits; up to ~50 requests/day for new accounts). :contentReference[oaicite:3]{index=3}.
