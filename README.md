@@ -95,4 +95,4 @@ python src/llm_detector.py
 
 ## LLM Cost
 
-OpenRouter free models (using `:free` variants): **$0.00** for this workload (~3 API calls, ~2,500 tokens total, within free tier limits; up to ~50 requests/day for new accounts). :contentReference[oaicite:3]{index=3}.
+OpenRouter free models (using `:free` variants): **$0.00** for this workload (~3 API calls, ~2,500 tokens total, within free tier limits; up to ~50 requests/day for new accounts). 
